@@ -78,6 +78,7 @@ public class Cards : MonoBehaviour
 		if(updateNav){
     		updateNav=false;
 	        if(Count>MaxCards){
+	        	PlayerPrefs.SetString("BannerAd","No");
 	        	Next.enabled=true;
 	        	Prev.enabled=true;
 	        	s.enabled=true;
@@ -112,6 +113,7 @@ public class Cards : MonoBehaviour
 				colorS.a=opaqueColor;
 				imgS.color=colorS;
 		    }else{
+		    	PlayerPrefs.SetString("BannerAd","Yes");
 		    	Next.enabled=false;
 				Image imgN=Next.image;
 				Color colorN=imgN.color;

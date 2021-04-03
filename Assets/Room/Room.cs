@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
 using VivoxUnity;
 
@@ -61,10 +62,13 @@ public class Room : MonoBehaviour
 			if(Time.time-escapeTime<1 || LobbyObj.GetComponent<RectTransform>().localScale!=new Vector3(0,0,0)){
 				if(LoggedIn)
 					Application.Quit();
-				else if(PlayerPrefs.GetString("Mode")=="Connect")
-					SceneManager.LoadScene("SampleScene");
-				else if(PlayerPrefs.GetString("Mode")=="Create")
-					SceneManager.LoadScene("CreateScene");
+				else{
+					Advertisement.Banner.Hide();
+					if(PlayerPrefs.GetString("Mode")=="Connect")
+						SceneManager.LoadScene("SampleScene");
+					else if(PlayerPrefs.GetString("Mode")=="Create")
+						SceneManager.LoadScene("CreateScene");
+				}
 			}else{
 				escapeTime=Time.time;
 			}
@@ -94,6 +98,7 @@ public class Room : MonoBehaviour
 	    	    	PlayerPrefs.SetString("Players",GameObject.Find("players").GetComponent<Text>().text);
 					displayNames();
 	    	    	PlayerPrefs.SetString("Recieved","");
+	    	    	PlayerPrefs.SetString("VideoAd","Yes");
 	    	    }
 	    	}
 		}

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
 
 public class Create : MonoBehaviour
@@ -19,7 +20,8 @@ public class Create : MonoBehaviour
 		}
     }
     
-    public void SceneChange() {  
+    public void SceneChange() {
+        Advertisement.Banner.Hide();
         SceneManager.LoadScene("CreateScene");  
     }
 }
