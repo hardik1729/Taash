@@ -33,6 +33,7 @@ public class Distribution : MonoBehaviour
         if(PlayerPrefs.GetString("Recieved")!=""){
         	string message=PlayerPrefs.GetString("Recieved");
         	if(message=="ClearAll"){
+                StartCoroutine(PlayAudio("Click"));
     			ClearAll();
 				InitialPlayCards();
     			PlayerPrefs.SetString("Recieved","");
@@ -42,11 +43,13 @@ public class Distribution : MonoBehaviour
     		}else if(message=="activeDistribute"){
     			activeDistribute=!activeDistribute;
     			if(activeDistribute){
-    				foreach (Transform child in GameObject.Find("TableObject").transform)
+                    PlayCards.Clear();
+    				foreach (Transform child in TableObject.transform)
 					    Destroy(child.gameObject);
     			}
     			PlayerPrefs.SetString("Recieved","");
     		}else if(message.Split(':').ToList()[0]=="Distribute"){
+                StartCoroutine(PlayAudio("PlayCard"));
     			Distribute(message.Split(':').ToList()[1]);
     			PlayerPrefs.SetString("Recieved","");
     		}
@@ -121,6 +124,7 @@ public class Distribution : MonoBehaviour
     }
 
     public void AllDistribute(){
+        StartCoroutine(PlayAudio("Click"));
     	string message="";
     	int n=PlayCards.Count;
     	while(n>0){
@@ -134,17 +138,16 @@ public class Distribution : MonoBehaviour
     }
 
     public void tickDistribute(){
+        StartCoroutine(PlayAudio("Click"));
     	distribution=false;
     	PlayerPrefs.SetString("Send","activeDistribute"+";DisplayTable");
-    	PlayCards.Clear();
-    	foreach (Transform child in TableObject.transform)
-		    Destroy(child.gameObject);
     	Destroy(GameObject.Find("ShareAll"));
     	Destroy(GameObject.Find("Tick"));
     }
 
     public void clickDistribute(){
     	if(activeDistribute){
+            StartCoroutine(PlayAudio("Click"));
 			GameObject Tick=new GameObject("Tick");
 			Tick.transform.SetParent(UserObject.transform,false);
 			Button TickBtn = Tick.AddComponent<Button>() as Button;
@@ -241,5 +244,12 @@ public class Distribution : MonoBehaviour
     		PlayCards[k]=PlayCards[n];
     		PlayCards[n]=value;
     	}
+    }
+
+    private IEnumerator PlayAudio (string name)
+    {
+        AudioSource audio = GameObject.Find(name).GetComponent<AudioSource>();
+        audio.Play();
+        yield return new WaitForSeconds(audio.clip.length);
     }
 }

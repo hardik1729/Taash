@@ -220,6 +220,7 @@ public class Cards : MonoBehaviour
     	}
     	if(PlayerPrefs.GetInt("CardNumSwap")!=-1)
     	{
+    		StartCoroutine(PlayAudio("PlayCard"));
     		string Card1=UserCards[PlayerPrefs.GetInt("CardNumSwap")];
     		string Card2=UserCards[idx+i];
     		UserCards[PlayerPrefs.GetInt("CardNumSwap")]=Card2;
@@ -229,6 +230,7 @@ public class Cards : MonoBehaviour
 			PlayerPrefs.SetString("UserCards",combinedString);
     		Drag();
     	}else{
+    		StartCoroutine(PlayAudio("PlayCard"));
     		PlayerPrefs.SetInt("CardNumSwap",idx+i);
     		GameObject c=GameObject.Find(name);
 			Button btn = c.GetComponent<Button>();
@@ -239,6 +241,7 @@ public class Cards : MonoBehaviour
 
     public void onNext(){
     	if(Next.image.color.a==opaqueColor){
+    		StartCoroutine(PlayAudio("PlayCard"));
     		Shift(true);
     		updateNav=true;
     	}
@@ -246,6 +249,7 @@ public class Cards : MonoBehaviour
     
     public void onPrev(){
     	if(Prev.image.color.a==opaqueColor){
+    		StartCoroutine(PlayAudio("PlayCard"));
     		Shift(false);
     		updateNav=true;
     	}
@@ -309,5 +313,12 @@ public class Cards : MonoBehaviour
 	    	}
 	    	updateNav=true;
 	  	}
+    }
+
+    private IEnumerator PlayAudio (string name)
+    {
+        AudioSource audio = GameObject.Find(name).GetComponent<AudioSource>();
+        audio.Play();
+        yield return new WaitForSeconds(audio.clip.length);
     }
 }

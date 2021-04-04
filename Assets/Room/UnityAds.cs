@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class UnityAds : MonoBehaviour, IUnityAdsListener
 {
-    private string gameID = "4074129";
     private string bannerID = "banner";
     private string interstitialID = "interstitial";
     bool showBanner=false;

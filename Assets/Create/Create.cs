@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class CardSelect : MonoBehaviour
+public class Create : MonoBehaviour
 {
     // Start is called before the first frame update
     List<string> cards=new List<string>(new string[]{"SA","SK","SQ","SJ","S10","S9","S8","S7","S6","S5","S4","S3","S2",
@@ -228,15 +228,15 @@ public class CardSelect : MonoBehaviour
     }
     
     public void onNext(){
-		string combinedString = string.Join( ",", FinalDecks.ToArray() );
 		if(Next.image.color.a==opaqueColor){
-			PlayerPrefs.SetString("Mode","Create");
+			string combinedString = string.Join( ",", FinalDecks.ToArray() );
 			PlayerPrefs.SetString("Cards",combinedString);
-			SceneManager.LoadScene("RoomScene");
+			StartCoroutine(PlayAudio(true));
 		}
     }
 
     public void onSelectAll(){
+    	StartCoroutine(PlayAudio(false));
 	    bool allSelected=true;
 	    foreach(string CardName in cards){
 		   	Image card=GameObject.Find(CardName).GetComponent<Button>().image;
@@ -263,6 +263,7 @@ public class CardSelect : MonoBehaviour
     }
 
     public void onSelectUpto7(){
+    	StartCoroutine(PlayAudio(false));
 	    bool selected7=true;
 	    foreach(string CardName in cardsUpto7){
 	    	Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
@@ -300,6 +301,7 @@ public class CardSelect : MonoBehaviour
 
     public void onNextDeck(){
     	if(NextDeck.image.color.a==opaqueColor){
+    		StartCoroutine(PlayAudio(false));
     		foreach(string card in cards){
 				Selection(card,false);
 			}
@@ -320,6 +322,7 @@ public class CardSelect : MonoBehaviour
 
     public void onPrevDeck(){
     	if(PrevDeck.image.color.a==opaqueColor){
+    		StartCoroutine(PlayAudio(false));
     		foreach(string card in cards){
 				Selection(card,false);
 			}
@@ -362,6 +365,7 @@ public class CardSelect : MonoBehaviour
     }
 
     public void onCard(){
+    	StartCoroutine(PlayAudio(false));
     	string name=EventSystem.current.currentSelectedGameObject.name;
     	Image card=GameObject.Find(name).GetComponent<Button>().image; 
 		Color color = card.color;
@@ -382,5 +386,14 @@ public class CardSelect : MonoBehaviour
 		updateNext=true;
 		updateSelectUpto7=true;
 		updateSelectAll=true;
+    }
+
+    private IEnumerator PlayAudio (bool sceneChange)
+    {
+        AudioSource audio = GameObject.Find("Click").GetComponent<AudioSource>();
+        audio.Play();
+        yield return new WaitForSeconds(audio.clip.length);
+        if(sceneChange)
+        	SceneManager.LoadScene("RoomScene");
     }
 }

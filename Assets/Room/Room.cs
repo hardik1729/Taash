@@ -104,8 +104,9 @@ public class Room : MonoBehaviour
 		}
 		if(PlayerPrefs.GetString("Send")!=""){
 			List<string> messages=PlayerPrefs.GetString("Send").Split(';').ToList();
-			foreach(string message in messages)
+			foreach(string message in messages){
 				SendGroupMessage(message);
+			}
 			PlayerPrefs.SetString("Send","");
 		}
     }
@@ -148,6 +149,7 @@ public class Room : MonoBehaviour
 	}
 
     public void Login(){
+    	StartCoroutine(PlayAudio("Click"));
     	string username=GameObject.Find("UserNameText").GetComponent<Text>().text;
     	AccountId accountId = new AccountId(_tokenIssuer, username, _tokenDomain);
 	    _loginSession = _client.GetLoginSession(accountId);
@@ -168,6 +170,7 @@ public class Room : MonoBehaviour
     }
 
     public void Logout(){
+    	StartCoroutine(PlayAudio("Click"));
     	_loginSession.Logout();
     	_loginSession.PropertyChanged -= onLoginSessionPropertyChanged;
 
@@ -251,6 +254,7 @@ public class Room : MonoBehaviour
 	}
 
     public void Create(){
+    	StartCoroutine(PlayAudio("Click"));
     	string channelname=GameObject.Find("ChannelNameText").GetComponent<Text>().text;
     	ChannelId channelId = new ChannelId(_tokenIssuer, channelname, _tokenDomain, ChannelType.NonPositional);
 	    _channelSession = _loginSession.GetChannelSession(channelId);
@@ -272,6 +276,7 @@ public class Room : MonoBehaviour
     }
 
     public void Delete(){
+    	StartCoroutine(PlayAudio("Click"));
     	string channelname=GameObject.Find("ChannelNameText").GetComponent<Text>().text;
     	ChannelId channelId = new ChannelId(_tokenIssuer, channelname, _tokenDomain, ChannelType.NonPositional);
     	_channelSession.Disconnect();
@@ -311,6 +316,7 @@ public class Room : MonoBehaviour
 
     private void OnParticipantAdded(object sender, KeyEventArg<string> keyEventArg)
 	{
+		StartCoroutine(PlayAudio("PlayCard"));
 	    ValidateArgs(new object[] { sender, keyEventArg });
 		
 	    var source = (VivoxUnity.IReadOnlyDictionary<string, IParticipant>)sender;	
@@ -328,6 +334,7 @@ public class Room : MonoBehaviour
 
 	private void OnParticipantRemoved(object sender, KeyEventArg<string> keyEventArg)
 	{
+		StartCoroutine(PlayAudio("PlayCard"));
 	    ValidateArgs(new object[] { sender, keyEventArg });
 				
 	    var source = (VivoxUnity.IReadOnlyDictionary<string, IParticipant>)sender;		
@@ -537,5 +544,12 @@ public class Room : MonoBehaviour
     		if(name!=PlayerPrefs.GetString("User"))
     			Destroy(GameObject.Find(name));
     	}
+    }
+
+    private IEnumerator PlayAudio (string name)
+    {
+        AudioSource audio = GameObject.Find(name).GetComponent<AudioSource>();
+        audio.Play();
+        yield return new WaitForSeconds(audio.clip.length);
     }
 }

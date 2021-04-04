@@ -28,14 +28,17 @@ public class Table : MonoBehaviour
     			Collect=false;
     			PlayerPrefs.SetString("Recieved","");
     		}else if(message.Split(':').ToList()[0]=="Table"){
+    			StartCoroutine(PlayAudio("PlayCard"));
 	        	Tabulation(message);
 	        	PlayerPrefs.SetString("LastMessage",message);
 	        	PlayerPrefs.SetString("Recieved","");
 	        }else if(message.Split(':').ToList()[0]=="Collect"){
+	        	StartCoroutine(PlayAudio("PlayCard"));
 	        	Collection(message);
 	        	PlayerPrefs.SetString("LastMessage",message);
 	        	PlayerPrefs.SetString("Recieved","");
 	        }else if(message=="Undo"){
+	        	StartCoroutine(PlayAudio("PlayCard"));
 	        	Undo();
 	        	PlayerPrefs.SetString("LastMessage","");
 	        	PlayerPrefs.SetString("Recieved","");
@@ -382,5 +385,12 @@ public class Table : MonoBehaviour
     		}
     	}
     	onTableCard();
+    }
+
+    private IEnumerator PlayAudio (string name)
+    {
+        AudioSource audio = GameObject.Find(name).GetComponent<AudioSource>();
+        audio.Play();
+        yield return new WaitForSeconds(audio.clip.length);
     }
 }
