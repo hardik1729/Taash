@@ -38,26 +38,27 @@ public class Distribution : MonoBehaviour
 				InitialPlayCards();
     			PlayerPrefs.SetString("Recieved","");
     		}else if(message.Split(':').ToList()[0]=="PlayCards"){
-    			PlayCards=new List<string>(message.Split(':').ToList()[1].Split(',').ToList());
-    			PlayerPrefs.SetString("Recieved","");
+    			PlayCards.AddRange(message.Split(':').ToList()[1].Split(',').ToList());
+                PlayerPrefs.SetString("Recieved","");
     		}else if(message=="activeDistribute"){
     			activeDistribute=!activeDistribute;
+                PlayCards.Clear();
     			if(activeDistribute){
-                    PlayCards.Clear();
     				foreach (Transform child in TableObject.transform)
 					    Destroy(child.gameObject);
     			}
     			PlayerPrefs.SetString("Recieved","");
     		}else if(message.Split(':').ToList()[0]=="Distribute"){
                 StartCoroutine(PlayAudio("PlayCard"));
-    			Distribute(message.Split(':').ToList()[1]);
+                List<string> names=message.Split(':').ToList()[1].Split(',').ToList();
+                foreach(string name in names)
+                    Distribute(name);
     			PlayerPrefs.SetString("Recieved","");
     		}
     	}
 
-    	if(distribution && !GameObject.Find("Tick").GetComponent<Button>().enabled && PlayCards.Count==0){
+    	if(distribution && !GameObject.Find("Tick").GetComponent<Button>().enabled && PlayCards.Count==0)
 			GameObject.Find("Tick").GetComponent<Button>().enabled=true;
-		}
     }
 
     public void ClearAll(){
@@ -125,13 +126,13 @@ public class Distribution : MonoBehaviour
 
     public void AllDistribute(){
         StartCoroutine(PlayAudio("Click"));
-    	string message="";
+    	string message="Distribute:";
     	int n=PlayCards.Count;
     	while(n>0){
-    		message=message+"Distribute:"+PlayerPrefs.GetString("User");
+    		message=message+PlayerPrefs.GetString("User");
     		n=n-PlayerPrefs.GetString("Players").Split(',').ToList().Count;
     		if(n>0)
-    			message=message+";";
+    			message=message+",";
     	}
     	PlayerPrefs.SetString("Send",message);
     	GameObject.Find("Tick").GetComponent<Button>().enabled=false;
@@ -175,11 +176,21 @@ public class Distribution : MonoBehaviour
 	    	SArectTransform.sizeDelta = new Vector2(100, 100);
 
 	    	ShufflePlayCards();
-	    	PlayerPrefs.SetString("Send","PlayCards:"+string.Join(",",PlayCards.ToArray())+";activeDistribute");
+            List<string> messages=new List<string>();
+            int n=PlayCards.Count;
+            int i=0;
+            while(n>0){
+                int j=52;
+                if(n-52<0)
+                    j=n;
+                messages.Add("PlayCards:"+string.Join(",",PlayCards.GetRange(i*52,j).ToArray()));
+                i=i+1;
+                n=n-52;
+            }
+	    	PlayerPrefs.SetString("Send","activeDistribute;"+string.Join(";",messages.ToArray()));
 	    	distribution=true;
-    	}else if(distribution){
+    	}else if(distribution)
     		PlayerPrefs.SetString("Send","Distribute:"+PlayerPrefs.GetString("User"));
-    	}
     }
 
     List<string> TempUserCards=new List<string>();
@@ -211,11 +222,14 @@ public class Distribution : MonoBehaviour
     public void InitialPlayCards(){
     	List<string> decks=new List<string>(PlayerPrefs.GetString("Cards").Split(',').ToList());
     	foreach(string deck in decks){
-    		for(int i=0;i<deck.Length;i++){
-    			if(deck[i]=='1'){
-    				PlayCards.Add(Cards[i]);
-    			}
-    		}
+            for(int i=0;i<deck.Length;i++){
+                int a=(int)deck[i];
+                for(int j=0;j<13;j++){
+                    if(a%2==1)
+                        PlayCards.Add(Cards[i*13+j]);
+                    a=a/2;
+                }
+            }
     	}
     	for(int i=0;i<PlayCards.Count;i++){
 			string name="CardBack";

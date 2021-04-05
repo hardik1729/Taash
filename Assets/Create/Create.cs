@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
 
 public class Create : MonoBehaviour
@@ -49,6 +50,7 @@ public class Create : MonoBehaviour
 
     void Start()
     {
+        Advertisement.Banner.Hide();
     	GameObject CardsObject=GameObject.Find("CardsGameObject");
     	NextDeck=GameObject.Find("NextDeck").GetComponent<Button>();
 	    PrevDeck=GameObject.Find("PrevDeck").GetComponent<Button>();
@@ -152,18 +154,12 @@ public class Create : MonoBehaviour
 			}
 			Image button=SelectUpto7.image;
 			Color colorButton=button.color;
-			Text text=GameObject.Find("Seven").GetComponent<Text>();
-			Color colorText=text.color;
 			if(highlight){
 				colorButton.a=opaqueColor;
 				button.color=colorButton;
-				colorText.a=opaqueColor;
-				text.color=colorText;
 			}else{
 				colorButton.a=translucentColor1;
 				button.color=colorButton;
-				colorText.a=translucentColor1;
-				text.color=colorText;
 			}
     	}
     	if(updateArrow){
@@ -229,7 +225,24 @@ public class Create : MonoBehaviour
     
     public void onNext(){
 		if(Next.image.color.a==opaqueColor){
-			string combinedString = string.Join( ",", FinalDecks.ToArray() );
+			List<string> messages=new List<string>();
+			foreach(string deck in FinalDecks){
+				string message="";
+				if(deck.Length==52){
+					for(int i=0;i<4;i++){
+						int a=0;
+						int p=1;
+						for(int j=0;j<13;j++){
+							if(deck[i*13+j]=='1')
+								a=a+p;
+							p=p*2;
+						}
+						message=message+(char)a;
+					}
+				}
+				messages.Add(message);
+			}
+			string combinedString = string.Join( ",", messages.ToArray() );
 			PlayerPrefs.SetString("Cards",combinedString);
 			StartCoroutine(PlayAudio(true));
 		}

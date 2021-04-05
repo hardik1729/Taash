@@ -54,13 +54,11 @@ public class Sample : MonoBehaviour
 
     public void SceneChangeToRoom() {
         PlayerPrefs.SetString("Mode","Connect");
-        Advertisement.Banner.Hide();
         StartCoroutine(PlayAudio("RoomScene"));
     }
 
     public void SceneChangeToCreate() {
         PlayerPrefs.SetString("Mode","Create");
-        Advertisement.Banner.Hide();
         StartCoroutine(PlayAudio("CreateScene"));
     }
 }
