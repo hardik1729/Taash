@@ -54,7 +54,7 @@ public class Distribution : MonoBehaviour
     		}else if(message.Split(':').ToList()[0]=="Distribute"){
                 StartCoroutine(PlayAudio("PlayCard"));
                 string name=message.Split(':').ToList()[1];
-                for(int i=0;i<(int)message.Split(':').ToList()[2][0]-31;i++)
+                for(int i=0;i<(int)message.Split(':').ToList()[2][0]-32;i++)
                     Distribute(name);
     			PlayerPrefs.SetString("Recieved","");
     		}
@@ -146,7 +146,7 @@ public class Distribution : MonoBehaviour
         StartCoroutine(PlayAudio("Click"));
     	string message="Distribute:"+PlayerPrefs.GetString("User")+":";
     	int n=PlayCards.Count;
-        int a=31;
+        int a=32;
     	while(n>0){
     		n=n-PlayerPrefs.GetString("Players").Split(',').ToList().Count;
             a=a+1;
@@ -243,7 +243,7 @@ public class Distribution : MonoBehaviour
     	List<string> decks=new List<string>(PlayerPrefs.GetString("Cards").Split(',').ToList());
     	foreach(string deck in decks){
             for(int i=0;i<deck.Length;i++){
-                int a=(int)deck[i]-31;
+                int a=(int)deck[i]-32;
                 for(int j=0;j<13;j++){
                     if(a%2==1)
                         PlayCards.Add(Cards[i*13+j]);
