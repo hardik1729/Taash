@@ -230,7 +230,7 @@ public class Create : MonoBehaviour
 				string message="";
 				if(deck.Length==52){
 					for(int i=0;i<4;i++){
-						int a=0;
+						int a=31;
 						int p=1;
 						for(int j=0;j<13;j++){
 							if(deck[i*13+j]=='1')
