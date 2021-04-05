@@ -104,9 +104,9 @@ public class Room : MonoBehaviour
 		}
 		if(PlayerPrefs.GetString("Send")!=""){
 			List<string> messages=PlayerPrefs.GetString("Send").Split(';').ToList();
+			PlayerPrefs.SetString("Send","");
 			foreach(string message in messages)
 				SendGroupMessage(message);
-			PlayerPrefs.SetString("Send","");
 		}
     }
 

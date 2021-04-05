@@ -15,6 +15,8 @@ public class Distribution : MonoBehaviour
 	float TableCardWidth=100;
 	float TableCardHeight=150;
 
+    int Count=0;
+
     GameObject TableObject;
     GameObject UserObject;
     bool activeDistribute=true;
@@ -44,21 +46,36 @@ public class Distribution : MonoBehaviour
     			activeDistribute=!activeDistribute;
                 PlayCards.Clear();
     			if(activeDistribute){
+                    Count=PlayCards.Count;
     				foreach (Transform child in TableObject.transform)
 					    Destroy(child.gameObject);
     			}
     			PlayerPrefs.SetString("Recieved","");
     		}else if(message.Split(':').ToList()[0]=="Distribute"){
                 StartCoroutine(PlayAudio("PlayCard"));
-                List<string> names=message.Split(':').ToList()[1].Split(',').ToList();
-                foreach(string name in names)
+                string name=message.Split(':').ToList()[1];
+                for(int i=0;i<(int)message.Split(':').ToList()[2][0];i++)
                     Distribute(name);
     			PlayerPrefs.SetString("Recieved","");
     		}
     	}
 
-    	if(distribution && !GameObject.Find("Tick").GetComponent<Button>().enabled && PlayCards.Count==0)
-			GameObject.Find("Tick").GetComponent<Button>().enabled=true;
+        if(distribution && Count!=PlayCards.Count && TableObject.transform.childCount!=0){
+            GameObject.Find("T"+(TableObject.transform.childCount-1)).GetComponent<Button>().enabled=false;
+            GameObject.Find("T"+(TableObject.transform.childCount-1)).GetComponent<Button>().interactable=false;
+            GameObject.Find("Tick").GetComponent<Button>().enabled=false;
+            GameObject.Find("Tick").GetComponent<Button>().interactable=false;
+            GameObject.Find("ShareAll").GetComponent<Button>().enabled=false;
+            GameObject.Find("ShareAll").GetComponent<Button>().interactable=false;
+        }
+        else if(distribution && TableObject.transform.childCount!=0){
+            GameObject.Find("T"+(TableObject.transform.childCount-1)).GetComponent<Button>().enabled=true;
+            GameObject.Find("T"+(TableObject.transform.childCount-1)).GetComponent<Button>().interactable=true;
+            GameObject.Find("Tick").GetComponent<Button>().enabled=true;
+            GameObject.Find("Tick").GetComponent<Button>().interactable=true;
+            GameObject.Find("ShareAll").GetComponent<Button>().enabled=true;
+            GameObject.Find("ShareAll").GetComponent<Button>().interactable=true;
+        }
     }
 
     public void ClearAll(){
@@ -71,6 +88,7 @@ public class Distribution : MonoBehaviour
 		activeDistribute=true;
     	distribution=false;
 		PlayCards.Clear();
+        Count=PlayCards.Count;
 		PlayerPrefs.SetString("UserCards","Start");
 		PlayerPrefs.SetInt("Collected",-1);
 		PlayerPrefs.SetInt("CardNumSwap",-1);
@@ -126,16 +144,14 @@ public class Distribution : MonoBehaviour
 
     public void AllDistribute(){
         StartCoroutine(PlayAudio("Click"));
-    	string message="Distribute:";
+    	string message="Distribute:"+PlayerPrefs.GetString("User")+":";
     	int n=PlayCards.Count;
+        int a=0;
     	while(n>0){
-    		message=message+PlayerPrefs.GetString("User");
     		n=n-PlayerPrefs.GetString("Players").Split(',').ToList().Count;
-    		if(n>0)
-    			message=message+",";
+            a=a+1;
     	}
-    	PlayerPrefs.SetString("Send",message);
-    	GameObject.Find("Tick").GetComponent<Button>().enabled=false;
+    	PlayerPrefs.SetString("Send",message+(char)a);
     }
 
     public void tickDistribute(){
@@ -147,7 +163,7 @@ public class Distribution : MonoBehaviour
     }
 
     public void clickDistribute(){
-    	if(activeDistribute){
+        if(activeDistribute){
             StartCoroutine(PlayAudio("Click"));
 			GameObject Tick=new GameObject("Tick");
 			Tick.transform.SetParent(UserObject.transform,false);
@@ -189,8 +205,10 @@ public class Distribution : MonoBehaviour
             }
 	    	PlayerPrefs.SetString("Send","activeDistribute;"+string.Join(";",messages.ToArray()));
 	    	distribution=true;
-    	}else if(distribution)
-    		PlayerPrefs.SetString("Send","Distribute:"+PlayerPrefs.GetString("User"));
+    	}else if(distribution){
+            int a=1;
+    		PlayerPrefs.SetString("Send","Distribute:"+PlayerPrefs.GetString("User")+":"+(char)a);
+        }
     }
 
     List<string> TempUserCards=new List<string>();
@@ -204,6 +222,7 @@ public class Distribution : MonoBehaviour
     			GameObject child=TableObject.transform.GetChild(TableObject.transform.childCount-1).gameObject;
     			TempUserCards.Add(PlayCards[TableObject.transform.childCount-1]);
     			PlayCards.RemoveAt(TableObject.transform.childCount-1);
+                Count=PlayCards.Count;
     			Vector3 TempPosition=TableObject.transform.GetChild(0).position;
     			child.transform.SetParent(UserObject.transform,false);
     			child.transform.position=TempPosition;
@@ -211,6 +230,7 @@ public class Distribution : MonoBehaviour
 			}else{
 				GameObject child=TableObject.transform.GetChild(TableObject.transform.childCount-1).gameObject;
 				PlayCards.RemoveAt(TableObject.transform.childCount-1);
+                Count=PlayCards.Count;
 				Vector3 TempPosition=TableObject.transform.GetChild(0).position;
 				child.transform.SetParent(GameObject.Find(players[(i+j)%players.Count]).transform,false);
 				child.transform.position=TempPosition;
@@ -246,6 +266,7 @@ public class Distribution : MonoBehaviour
         	rectTransform.localPosition = new Vector3(0, 237.5F, 0);
         	rectTransform.sizeDelta = new Vector2(TableCardWidth, TableCardHeight);
 		}
+        Count=PlayCards.Count;
     }
 
     public void ShufflePlayCards(){
