@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
 using VivoxUnity;
 
@@ -63,7 +62,6 @@ public class Room : MonoBehaviour
 				if(LoggedIn)
 					Application.Quit();
 				else{
-					Advertisement.Banner.Hide();
 					if(PlayerPrefs.GetString("Mode")=="Connect")
 						SceneManager.LoadScene("SampleScene");
 					else if(PlayerPrefs.GetString("Mode")=="Create")
