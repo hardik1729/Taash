@@ -10,6 +10,7 @@ public class Table : MonoBehaviour
     // Start is called before the first frame update
     GameObject TableObject;
     GameObject UserObject;
+    string LastActiveTableCard="";
 
     void Start()
     {
@@ -43,6 +44,13 @@ public class Table : MonoBehaviour
 	        	PlayerPrefs.SetString("LastMessage","");
 	        	PlayerPrefs.SetString("Recieved","");
 	        }
+        }
+
+        if(PlayerPrefs.GetString("LastActiveTableCard")!="" && PlayerPrefs.GetString("SelectedTableCard")!=PlayerPrefs.GetString("LastActiveTableCard")){
+        	Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+			Color color=BRCOld.color;
+			color.a=opaqueColor;
+			BRCOld.color=color;
         }
 
         if(PlayerPrefs.GetString("SelectedTableCard")=="" && PlayerPrefs.GetInt("Collected")!=-1){
@@ -230,6 +238,13 @@ public class Table : MonoBehaviour
 	}
 
 	void Tabulation(string message){
+		if(PlayerPrefs.GetString("LastActiveTableCard")!=""){
+    		Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+			Color color=BRCOld.color;
+			color.a=transparentColor;
+			BRCOld.color=color;
+		}
+		PlayerPrefs.SetString("LastActiveTableCard",message.Split(':').ToList()[2]);
     	GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
     	string senderName=message.Split(':').ToList()[1];
     	GameObject child=new GameObject(rc.name+rc.transform.childCount+":"+message.Split(':').ToList()[3]);
@@ -251,6 +266,13 @@ public class Table : MonoBehaviour
     }
 
     void Collection(string message){
+    	if(PlayerPrefs.GetString("LastActiveTableCard")!="" && PlayerPrefs.GetString("LastActiveTableCard")==message.Split(':').ToList()[2]){
+    		Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+			Color color=BRCOld.color;
+			color.a=transparentColor;
+			BRCOld.color=color;
+			PlayerPrefs.SetString("LastActiveTableCard","");
+		}
     	GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
     	string senderName=message.Split(':').ToList()[1];
     	if(PlayerPrefs.GetString("SelectedTableCard")==rc.name){
@@ -355,6 +377,13 @@ public class Table : MonoBehaviour
     public void Undo(){
     	string message=PlayerPrefs.GetString("LastMessage");
     	if(message.Split(':').ToList()[0]=="Table"){
+    		if(PlayerPrefs.GetString("LastActiveTableCard")!=""){
+	    		Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+				Color color=BRCOld.color;
+				color.a=transparentColor;
+				BRCOld.color=color;
+				PlayerPrefs.SetString("LastActiveTableCard","");
+			}
     		string senderName=message.Split(':').ToList()[1];
     		GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
     		string name="";
@@ -377,9 +406,8 @@ public class Table : MonoBehaviour
     		GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
     		List<string> names=message.Split(':').ToList()[3].Split(',').ToList();
     		string newMessage="Collect:"+senderName+":"+rc.name+":";
-    		foreach(string name in names){
+    		foreach(string name in names)
     			Tabulation(newMessage+name);
-    		}
     		if(PlayerPrefs.GetString("User")==senderName){
     			PlayerPrefs.SetInt("Collected",PlayerPrefs.GetInt("Collected")-1);
     		}

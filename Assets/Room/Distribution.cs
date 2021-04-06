@@ -101,6 +101,7 @@ public class Distribution : MonoBehaviour
 		PlayerPrefs.SetInt("CardNumSwap",-1);
 		PlayerPrefs.SetString("SelectedTableCard","");
 		PlayerPrefs.SetString("LastMessage","");
+        PlayerPrefs.SetString("LastActiveTableCard","");
     }
 
     private IEnumerator SmoothLerpCreate (float time, GameObject child)
