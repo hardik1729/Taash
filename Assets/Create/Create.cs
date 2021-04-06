@@ -230,14 +230,16 @@ public class Create : MonoBehaviour
 				string message="";
 				if(deck.Length==52){
 					for(int i=0;i<4;i++){
-						int a=32;
+						int a=0;
 						int p=1;
 						for(int j=0;j<13;j++){
 							if(deck[i*13+j]=='1')
 								a=a+p;
 							p=p*2;
 						}
-						message=message+(char)a;
+						message=message+a;
+						if(i!=3)
+							message=message+".";
 					}
 				}
 				messages.Add(message);

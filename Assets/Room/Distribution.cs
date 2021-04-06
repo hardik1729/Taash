@@ -54,7 +54,14 @@ public class Distribution : MonoBehaviour
     		}else if(message.Split(':').ToList()[0]=="Distribute"){
                 StartCoroutine(PlayAudio("PlayCard"));
                 string name=message.Split(':').ToList()[1];
-                for(int i=0;i<(int)message.Split(':').ToList()[2][0]-32;i++)
+                string num=message.Split(':').ToList()[2];
+                int n=0;
+                int p=1;
+                for(int i=num.Length-1;i>-1;i--){
+                    n=n+((int)num[i]-48)*p;
+                    p=p*10;
+                }
+                for(int i=0;i<n;i++)
                     Distribute(name);
     			PlayerPrefs.SetString("Recieved","");
     		}
@@ -146,12 +153,12 @@ public class Distribution : MonoBehaviour
         StartCoroutine(PlayAudio("Click"));
     	string message="Distribute:"+PlayerPrefs.GetString("User")+":";
     	int n=PlayCards.Count;
-        int a=32;
+        int a=0;
     	while(n>0){
     		n=n-PlayerPrefs.GetString("Players").Split(',').ToList().Count;
             a=a+1;
     	}
-    	PlayerPrefs.SetString("Send",message+(char)a);
+    	PlayerPrefs.SetString("Send",message+a);
     }
 
     public void tickDistribute(){
@@ -205,10 +212,8 @@ public class Distribution : MonoBehaviour
             }
 	    	PlayerPrefs.SetString("Send","activeDistribute;"+string.Join(";",messages.ToArray()));
 	    	distribution=true;
-    	}else if(distribution){
-            int a=32;
-    		PlayerPrefs.SetString("Send","Distribute:"+PlayerPrefs.GetString("User")+":"+(char)a);
-        }
+    	}else if(distribution)
+    		PlayerPrefs.SetString("Send","Distribute:"+PlayerPrefs.GetString("User")+":1");
     }
 
     List<string> TempUserCards=new List<string>();
@@ -242,13 +247,20 @@ public class Distribution : MonoBehaviour
     public void InitialPlayCards(){
     	List<string> decks=new List<string>(PlayerPrefs.GetString("Cards").Split(',').ToList());
     	foreach(string deck in decks){
-            for(int i=0;i<deck.Length;i++){
-                int a=(int)deck[i]-32;
+            int i=0;
+            foreach(string group in deck.Split('.').ToList()){
+                int a=0;
+                int p=1;
+                for(int k=group.Length-1;k>-1;k--){
+                    a=a+((int)group[k]-48)*p;
+                    p=p*10;
+                }
                 for(int j=0;j<13;j++){
                     if(a%2==1)
                         PlayCards.Add(Cards[i*13+j]);
                     a=a/2;
                 }
+                i=i+1;
             }
     	}
     	for(int i=0;i<PlayCards.Count;i++){
