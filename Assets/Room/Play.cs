@@ -19,8 +19,6 @@ public class Play : MonoBehaviour
 	    PlayerPrefs.SetString("LastActiveTableCard","");
 	    PlayerPrefs.SetString("LastActiveTableCardColor","");
 	    PlayerPrefs.SetString("LastMessage","");
-	    PlayerPrefs.SetString("VideoAd","No");
-	    PlayerPrefs.SetString("BannerAd","None");
     }
 
     public void onRestart(){

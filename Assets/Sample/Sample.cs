@@ -10,7 +10,6 @@ public class Sample : MonoBehaviour
     // Start is called before the first frame update
     private string gameID = "4074129";
     private string bannerID = "banner";
-    bool showBanner=false;
     GameObject dialog = null;
 
     void Start()
@@ -25,8 +24,7 @@ public class Sample : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!showBanner && Advertisement.IsReady(bannerID)){
-            showBanner=true;
+        if(Advertisement.IsReady(bannerID)){
             Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
             Advertisement.Banner.Show(bannerID);
         }

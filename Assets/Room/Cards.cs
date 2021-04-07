@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Advertisements;
 
 public class Cards : MonoBehaviour
 {
@@ -75,6 +76,13 @@ public class Cards : MonoBehaviour
 			}
 			Decision=false;
 		}
+		if(s.enabled)
+			Advertisement.Banner.Hide();
+		else if(Advertisement.IsReady("banner")){
+            Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
+            Advertisement.Banner.Show("banner");  
+		}
+
 		if(updateNav){
     		updateNav=false;
 	        if(Count>MaxCards){

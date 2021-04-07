@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
 using VivoxUnity;
 using TMPro;
@@ -110,7 +111,8 @@ public class Room : MonoBehaviour
 	    	    	PlayerPrefs.SetString("Players",GameObject.Find("players").GetComponent<Text>().text);
 					displayNames();
 	    	    	PlayerPrefs.SetString("Recieved","");
-	    	    	PlayerPrefs.SetString("VideoAd","Yes");
+	    	    	if (Advertisement.IsReady("interstitial"))
+			            Advertisement.Show("interstitial");
 	    	    }
 	    	}
 		}
