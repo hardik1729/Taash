@@ -11,6 +11,8 @@ public class Table : MonoBehaviour
     GameObject TableObject;
     GameObject UserObject;
 
+    string[] UserColor=new string[]{"Green","Red","Yellow","Blue"};
+
     void Start()
     {
         TableObject=GameObject.Find("TableObject");
@@ -47,6 +49,9 @@ public class Table : MonoBehaviour
 
         if(PlayerPrefs.GetString("LastActiveTableCard")!="" && PlayerPrefs.GetString("SelectedTableCard")!=PlayerPrefs.GetString("LastActiveTableCard")){
         	Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+			Texture2D SpriteTextureOld = Resources.Load<Texture2D>("Rectangle"+PlayerPrefs.GetString("LastActiveTableCardColor"));
+			Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
+			BRCOld.sprite = SpriteOld;
 			Color color=BRCOld.color;
 			color.a=opaqueColor;
 			BRCOld.color=color;
@@ -62,15 +67,15 @@ public class Table : MonoBehaviour
             CollectedObject.GetComponent<RectTransform>().sizeDelta=new Vector2(0, 0);
 		}
 
-		if(PlayerPrefs.GetInt("Collected")!=-1){
+		if(PlayerPrefs.GetInt("Collected")!=-1)
 			GameObject.Find("Undo").GetComponent<RectTransform>().sizeDelta=new Vector2(90, 90);
-		}else{
+		else
 			GameObject.Find("Undo").GetComponent<RectTransform>().sizeDelta=new Vector2(0, 0);
-		}
+		
 		if (Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.currentSelectedGameObject){
 			if(PlayerPrefs.GetString("SelectedTableCard")!=""){
 		    	Image BRCOld=GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
-				Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RoundedRectangle");
+				Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
 				Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 				BRCOld.sprite = SpriteOld;
 				Color color=BRCOld.color;
@@ -126,7 +131,7 @@ public class Table : MonoBehaviour
 				GameObject B=new GameObject("B"+"RC"+r+""+c);
 				B.transform.SetParent(rc.transform,false);
 				Image BImage=B.AddComponent<Image>() as Image;
-				Texture2D SpriteB = Resources.Load<Texture2D>("RoundedRectangle");
+				Texture2D SpriteB = Resources.Load<Texture2D>("RectangleBlack");
 				Sprite BSprite = Sprite.Create(SpriteB, new Rect(0, 0, SpriteB.width, SpriteB.height),new Vector2(0,0),1);
 				RectTransform rectTransformB = BImage.GetComponent<RectTransform>();
 	        	rectTransformB.localEulerAngles = new Vector3(0, 0, RectRotation);
@@ -143,9 +148,8 @@ public class Table : MonoBehaviour
 		string BtnName="";
 		if(EventSystem.current.currentSelectedGameObject!=null){
 			BtnName=EventSystem.current.currentSelectedGameObject.name;
-			if(!(BtnName.Length==4 && BtnName[0]=='R' && BtnName[1]=='C')){
+			if(!(BtnName.Length==4 && BtnName[0]=='R' && BtnName[1]=='C'))
 				BtnName="";
-			}
 		}
 		if(BtnName!="" && PlayerPrefs.GetInt("CardNumSwap")!=-1){
 			List<string> UserCards=PlayerPrefs.GetString("UserCards").Split(',').ToList();
@@ -162,7 +166,7 @@ public class Table : MonoBehaviour
 		}else{
 			if(PlayerPrefs.GetString("SelectedTableCard")!=""){
 				Image BRCOld=GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
-				Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RoundedRectangle");
+				Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
 				Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 				BRCOld.sprite = SpriteOld;
 				Color color=BRCOld.color;
@@ -176,7 +180,7 @@ public class Table : MonoBehaviour
 				BtnName=PlayerPrefs.GetString("SelectedTableCard");
 			if(BtnName!=""){
 				Image BRC=GameObject.Find(BtnName).transform.GetChild(0).gameObject.GetComponent<Image>();
-				Texture2D SpriteTexture = Resources.Load<Texture2D>("RectangleOutlined");
+				Texture2D SpriteTexture = Resources.Load<Texture2D>("RectangleBlack");
 				Sprite NewSprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height),new Vector2(0,0),1);
 				BRC.sprite = NewSprite;
 				Color color=BRC.color;
@@ -237,22 +241,25 @@ public class Table : MonoBehaviour
 	}
 
 	void Tabulation(string message){
+		GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
+    	string senderName=message.Split(':').ToList()[1];
 		if(PlayerPrefs.GetString("LastActiveTableCard")!=""){
     		Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+			Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
+			Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
+			BRCOld.sprite = SpriteOld;
 			Color color=BRCOld.color;
 			color.a=transparentColor;
 			BRCOld.color=color;
 		}
-		PlayerPrefs.SetString("LastActiveTableCard",message.Split(':').ToList()[2]);
-    	GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
-    	string senderName=message.Split(':').ToList()[1];
-    	GameObject child=new GameObject(rc.name+rc.transform.childCount+":"+message.Split(':').ToList()[3]);
+		PlayerPrefs.SetString("LastActiveTableCard",rc.name);
+		PlayerPrefs.SetString("LastActiveTableCardColor",UserColor[PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(senderName)]);
+		GameObject child=new GameObject(rc.name+rc.transform.childCount+":"+message.Split(':').ToList()[3]);
 		child.transform.SetParent(rc.transform,false);
-		if(senderName!=PlayerPrefs.GetString("User")){
+		if(senderName!=PlayerPrefs.GetString("User"))
     		child.transform.position=GameObject.Find(senderName).transform.position;
-    	}else{
+    	else
     		child.transform.position=UserObject.transform.position;
-    	}
 		Image img = child.AddComponent<Image>() as Image;
 		Texture2D SpriteTexture = Resources.Load<Texture2D>(message.Split(':').ToList()[3]);
 		Sprite NewSprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height),new Vector2(0,0),1);
@@ -265,27 +272,29 @@ public class Table : MonoBehaviour
     }
 
     void Collection(string message){
-    	if(PlayerPrefs.GetString("LastActiveTableCard")!="" && PlayerPrefs.GetString("LastActiveTableCard")==message.Split(':').ToList()[2]){
-    		Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
-			Color color=BRCOld.color;
-			color.a=transparentColor;
-			BRCOld.color=color;
-			PlayerPrefs.SetString("LastActiveTableCard","");
-		}
     	GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
     	string senderName=message.Split(':').ToList()[1];
-    	if(PlayerPrefs.GetString("SelectedTableCard")==rc.name){
-			Image BRCOld=GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
-			Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RoundedRectangle");
+    	if(PlayerPrefs.GetString("LastActiveTableCard")!="" && PlayerPrefs.GetString("LastActiveTableCard")==rc.name){
+    		Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+			Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
 			Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 			BRCOld.sprite = SpriteOld;
 			Color color=BRCOld.color;
 			color.a=transparentColor;
 			BRCOld.color=color;
-			for(int i=1;i<GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.childCount;i++){
+			PlayerPrefs.SetString("LastActiveTableCard","");
+			PlayerPrefs.SetString("LastActiveTableCardColor","");
+		}
+    	if(PlayerPrefs.GetString("SelectedTableCard")==rc.name){
+			Image BRCOld=GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+			Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
+			Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
+			BRCOld.sprite = SpriteOld;
+			Color color=BRCOld.color;
+			color.a=opaqueColor;
+			BRCOld.color=color;
+			for(int i=1;i<GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.childCount;i++)
 				Destroy(GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")+"V"+(i-1)));
-			}
-			PlayerPrefs.SetString("SelectedTableCard","");
 			Collect=false;
 			Destroy(GameObject.Find("Collect"));
 		}
@@ -313,9 +322,8 @@ public class Table : MonoBehaviour
 	    while (elapsedTime <= time)
 	    {
 	        child.transform.localPosition = Vector3.Lerp(startingPos, finalPos, (elapsedTime / time));
-	        if(time==elapsedTime){
+	        if(time==elapsedTime)
 	        	yield break;
-	        }
 	        elapsedTime += Time.deltaTime;
 	        if(time-elapsedTime<0.01)
 	        	elapsedTime=time;
@@ -337,9 +345,8 @@ public class Table : MonoBehaviour
 	        	yield break;
 	        }
 	        elapsedTime += Time.deltaTime;
-	        if(time-elapsedTime<0.01){
+	        if(time-elapsedTime<0.01)
 	        	elapsedTime=time;
-	        }
 	        yield return null;
 	    }
     }
@@ -378,10 +385,14 @@ public class Table : MonoBehaviour
     	if(message.Split(':').ToList()[0]=="Table"){
     		if(PlayerPrefs.GetString("LastActiveTableCard")!=""){
 	    		Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+				Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
+				Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
+				BRCOld.sprite = SpriteOld;
 				Color color=BRCOld.color;
 				color.a=transparentColor;
 				BRCOld.color=color;
 				PlayerPrefs.SetString("LastActiveTableCard","");
+				PlayerPrefs.SetString("LastActiveTableCardColor","");
 			}
     		string senderName=message.Split(':').ToList()[1];
     		GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
@@ -407,9 +418,8 @@ public class Table : MonoBehaviour
     		string newMessage="Collect:"+senderName+":"+rc.name+":";
     		foreach(string name in names)
     			Tabulation(newMessage+name);
-    		if(PlayerPrefs.GetString("User")==senderName){
+    		if(PlayerPrefs.GetString("User")==senderName)
     			PlayerPrefs.SetInt("Collected",PlayerPrefs.GetInt("Collected")-1);
-    		}
     	}
     	onTableCard();
     }

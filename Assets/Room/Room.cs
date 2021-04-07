@@ -67,9 +67,8 @@ public class Room : MonoBehaviour
 					else if(PlayerPrefs.GetString("Mode")=="Create")
 						SceneManager.LoadScene("CreateScene");
 				}
-			}else{
+			}else
 				escapeTime=Time.time;
-			}
 		}
 		if(LobbyObj.GetComponent<RectTransform>().localScale!=new Vector3(0,0,0) && GameObject.Find("players").GetComponent<Text>().text!=""){
 			List<string> tempList=GameObject.Find("players").GetComponent<Text>().text.Split(',').ToList();
@@ -460,7 +459,16 @@ public class Room : MonoBehaviour
 	            	player.transform.SetParent(GameObj.transform,false);
 	            	Text playerText=player.AddComponent<Text>() as Text;
 		            playerText.fontSize=32;
-		            playerText.color=Color.black;
+		            switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
+		            	case 0:
+		            		playerText.color=Color.green;
+		            		break;
+		            	case 1:
+		            		playerText.color=Color.red;
+		            		break;
+		            	default:
+		            		break;
+		            }
 		            playerText.alignment = TextAnchor.MiddleCenter;
 		            playerText.font=Resources.GetBuiltinResource<Font>("Arial.ttf");
 		            playerText.text=players[(i+j)%players.Count];
@@ -476,7 +484,19 @@ public class Room : MonoBehaviour
 	            	player.transform.SetParent(GameObj.transform,false);
 	            	Text playerText=player.AddComponent<Text>() as Text;
 		            playerText.fontSize=32;
-		            playerText.color=Color.black;
+		            switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
+		            	case 0:
+		            		playerText.color=Color.green;
+		            		break;
+		            	case 1:
+		            		playerText.color=Color.red;
+		            		break;
+		            	case 2:
+		            		playerText.color=Color.yellow;
+		            		break;
+		            	default:
+		            		break;
+		            }
 		            playerText.alignment = TextAnchor.MiddleCenter;
 		            playerText.font=Resources.GetBuiltinResource<Font>("Arial.ttf");
 		            playerText.text=players[(i+j)%players.Count];
@@ -503,7 +523,22 @@ public class Room : MonoBehaviour
 	            	player.transform.SetParent(GameObj.transform,false);
 	            	Text playerText=player.AddComponent<Text>() as Text;
 		            playerText.fontSize=32;
-		            playerText.color=Color.black;
+		            switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
+		            	case 0:
+		            		playerText.color=Color.green;
+		            		break;
+		            	case 1:
+		            		playerText.color=Color.red;
+		            		break;
+		            	case 2:
+		            		playerText.color=Color.yellow;
+		            		break;
+		            	case 3:
+		            		playerText.color=Color.blue;
+		            		break;
+		            	default:
+		            		break;
+		            }
 		            playerText.alignment = TextAnchor.MiddleCenter;
 		            playerText.font=Resources.GetBuiltinResource<Font>("Arial.ttf");
 		            playerText.text=players[(i+j)%players.Count];
