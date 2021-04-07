@@ -29,7 +29,7 @@ public class Room : MonoBehaviour
 	bool LoggedIn=false;
 	float escapeTime=0;
 
-	string[] UserColor=new string[]{"#FF0000","#00FF00","#0000FF","#FF00FF"};
+	string[] UserColor=new string[]{"#FF0000","#00FF00","#0000FF","#FFFF00"};
 
     void Start()
     {

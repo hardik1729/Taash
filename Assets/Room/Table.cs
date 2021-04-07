@@ -11,7 +11,7 @@ public class Table : MonoBehaviour
     GameObject TableObject;
     GameObject UserObject;
 
-    string[] UserColor=new string[]{"Red","Green","Blue","Magenta"};
+    string[] UserColor=new string[]{"Red","Green","Blue","Yellow"};
 
     void Start()
     {
