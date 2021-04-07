@@ -50,7 +50,6 @@ public class Create : MonoBehaviour
 
     void Start()
     {
-        Advertisement.Banner.Hide();
     	GameObject CardsObject=GameObject.Find("CardsGameObject");
     	NextDeck=GameObject.Find("NextDeck").GetComponent<Button>();
 	    PrevDeck=GameObject.Find("PrevDeck").GetComponent<Button>();
@@ -77,7 +76,8 @@ public class Create : MonoBehaviour
 				Texture2D SpriteTick = Resources.Load<Texture2D>("Tick");				
 				Sprite TickSprite = Sprite.Create(SpriteTick, new Rect(0, 0, SpriteTick.width, SpriteTick.height),new Vector2(0,0),1);
 				TickImage.sprite=TickSprite;
-
+				RectTransform TickRectTransform = Tick.GetComponent<RectTransform>();
+	        	TickRectTransform.sizeDelta = new Vector2(width, width);
 				float locX;
 				float locY;
 				if(j<8){
@@ -107,6 +107,7 @@ public class Create : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    	Advertisement.Banner.Hide();
     	if (Input.GetKeyDown(KeyCode.Escape)) {
 		    SceneManager.LoadScene("SampleScene");
 		}

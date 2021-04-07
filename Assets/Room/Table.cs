@@ -10,7 +10,6 @@ public class Table : MonoBehaviour
     // Start is called before the first frame update
     GameObject TableObject;
     GameObject UserObject;
-    string LastActiveTableCard="";
 
     void Start()
     {

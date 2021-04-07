@@ -16,6 +16,7 @@ public class Play : MonoBehaviour
 	    PlayerPrefs.SetInt("Collected",-1);
 	    PlayerPrefs.SetInt("CardNumSwap",-1);
 	    PlayerPrefs.SetString("SelectedTableCard","");
+	    PlayerPrefs.SetString("LastActiveTableCard","");
 	    PlayerPrefs.SetString("LastMessage","");
 	    PlayerPrefs.SetString("VideoAd","No");
 	    PlayerPrefs.SetString("BannerAd","None");
