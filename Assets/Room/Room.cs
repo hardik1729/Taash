@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using VivoxUnity;
+using TMPro;
 
 public class Room : MonoBehaviour
 {
@@ -27,6 +28,8 @@ public class Room : MonoBehaviour
 	
 	bool LoggedIn=false;
 	float escapeTime=0;
+
+	string[] UserColor=new string[]{"#FF0000","#00FF00","#0000FF","#FF00FF"};
 
     void Start()
     {
@@ -57,6 +60,18 @@ public class Room : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    	if(PlayerPrefs.GetString("Mode")=="Create"){
+	    	if(GameObject.Find("players").GetComponent<Text>().text.Split(',').ToList().Count>4){
+	    		GameObject.Find("Start").GetComponent<Button>().enabled=false;
+	        	GameObject.Find("Start").GetComponent<Button>().interactable=false;
+	    	}else if(GameObject.Find("players").GetComponent<Text>().text!=""){
+	    		GameObject.Find("Start").GetComponent<Button>().enabled=true;
+		        GameObject.Find("Start").GetComponent<Button>().interactable=true;
+	    	}else if(GameObject.Find("players").GetComponent<Text>().text==""){
+	    		GameObject.Find("Start").GetComponent<Button>().enabled=false;
+		        GameObject.Find("Start").GetComponent<Button>().interactable=false;
+	    	}
+	    }
         if(Input.GetKeyDown(KeyCode.Escape)){
 			if(Time.time-escapeTime<1 || LobbyObj.GetComponent<RectTransform>().localScale!=new Vector3(0,0,0)){
 				if(LoggedIn)
@@ -230,11 +245,6 @@ public class Room : MonoBehaviour
 			        GameObject.Find("Create").GetComponent<Button>().interactable=false;
 			        GameObject.Find("Delete").GetComponent<Button>().enabled=true;
 			        GameObject.Find("Delete").GetComponent<Button>().interactable=true;
-			        
-			        if(PlayerPrefs.GetString("Mode")=="Create"){
-				        GameObject.Find("Start").GetComponent<Button>().enabled=true;
-	        			GameObject.Find("Start").GetComponent<Button>().interactable=true;
-	        		}
 		            Debug.Log("Text connected in " + _channelSession.Key.Name); 
 	            break;
 	            
@@ -457,21 +467,22 @@ public class Room : MonoBehaviour
 	            for(int j=1;j<players.Count;j++){
 	            	GameObject player=new GameObject(players[(i+j)%players.Count]);
 	            	player.transform.SetParent(GameObj.transform,false);
-	            	Text playerText=player.AddComponent<Text>() as Text;
+	            	TextMeshProUGUI playerText=player.AddComponent<TextMeshProUGUI>() as TextMeshProUGUI;
 		            playerText.fontSize=32;
+		            playerText.color=Color.black;
 		            switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
 		            	case 0:
-		            		playerText.color=Color.green;
+		            		playerText.text="<u color="+UserColor[0]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
 		            		break;
 		            	case 1:
-		            		playerText.color=Color.red;
+		            		playerText.text="<u color="+UserColor[1]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
 		            		break;
 		            	default:
 		            		break;
 		            }
-		            playerText.alignment = TextAnchor.MiddleCenter;
-		            playerText.font=Resources.GetBuiltinResource<Font>("Arial.ttf");
-		            playerText.text=players[(i+j)%players.Count];
+		            playerText.alignment = TextAlignmentOptions.Midline;
+		            playerText.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+		            playerText.fontSharedMaterial = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - Drop Shadow");
 		            RectTransform rectTransform = playerText.GetComponent<RectTransform>();
 		        	rectTransform.localPosition = new Vector3(0, 620, 0);
 		        	rectTransform.sizeDelta = new Vector2(200, 75);
@@ -482,35 +493,36 @@ public class Room : MonoBehaviour
 	        	for(int j=1;j<players.Count;j++){
 	            	GameObject player=new GameObject(players[(i+j)%players.Count]);
 	            	player.transform.SetParent(GameObj.transform,false);
-	            	Text playerText=player.AddComponent<Text>() as Text;
+	            	TextMeshProUGUI playerText=player.AddComponent<TextMeshProUGUI>() as TextMeshProUGUI;
 		            playerText.fontSize=32;
+		            playerText.color=Color.black;
 		            switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
 		            	case 0:
-		            		playerText.color=Color.green;
+		            		playerText.text="<u color="+UserColor[0]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
 		            		break;
 		            	case 1:
-		            		playerText.color=Color.red;
+		            		playerText.text="<u color="+UserColor[1]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
 		            		break;
 		            	case 2:
-		            		playerText.color=Color.yellow;
+		            		playerText.text="<u color="+UserColor[2]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
 		            		break;
 		            	default:
 		            		break;
 		            }
-		            playerText.alignment = TextAnchor.MiddleCenter;
-		            playerText.font=Resources.GetBuiltinResource<Font>("Arial.ttf");
-		            playerText.text=players[(i+j)%players.Count];
+		            playerText.alignment=TextAlignmentOptions.Midline;
+		            playerText.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+		            playerText.fontSharedMaterial = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - Drop Shadow");
 		            RectTransform rectTransform = playerText.GetComponent<RectTransform>();
 		            switch(j){
 		            	case 1:
-		            		rectTransform.localPosition = new Vector3(-320, 620, 0);
+		            		rectTransform.localPosition = new Vector3(-320, 580, 0);
 				        	rectTransform.sizeDelta = new Vector2(200, 75);
-				        	rectTransform.localEulerAngles = new Vector3(0, 0, 0);
+				        	rectTransform.localEulerAngles = new Vector3(0, 0, 45);
 				        	break;
 				        case 2:
-				        	rectTransform.localPosition = new Vector3(320, 620, 0);
+				        	rectTransform.localPosition = new Vector3(320, 580, 0);
 				        	rectTransform.sizeDelta = new Vector2(200, 75);
-				        	rectTransform.localEulerAngles = new Vector3(0, 0, 0);
+				        	rectTransform.localEulerAngles = new Vector3(0, 0, -45);
 				        	break;
 				        default:
 				        	break;
@@ -521,27 +533,28 @@ public class Room : MonoBehaviour
 	            for(int j=1;j<players.Count;j++){
 	            	GameObject player=new GameObject(players[(i+j)%players.Count]);
 	            	player.transform.SetParent(GameObj.transform,false);
-	            	Text playerText=player.AddComponent<Text>() as Text;
+	            	TextMeshProUGUI playerText=player.AddComponent<TextMeshProUGUI>() as TextMeshProUGUI;
 		            playerText.fontSize=32;
+		            playerText.color=Color.black;
 		            switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
 		            	case 0:
-		            		playerText.color=Color.green;
+		            		playerText.text="<u color="+UserColor[0]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
 		            		break;
 		            	case 1:
-		            		playerText.color=Color.red;
+		            		playerText.text="<u color="+UserColor[1]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
 		            		break;
 		            	case 2:
-		            		playerText.color=Color.yellow;
+		            		playerText.text="<u color="+UserColor[2]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
 		            		break;
 		            	case 3:
-		            		playerText.color=Color.blue;
+		            		playerText.text="<u color="+UserColor[3]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
 		            		break;
 		            	default:
 		            		break;
 		            }
-		            playerText.alignment = TextAnchor.MiddleCenter;
-		            playerText.font=Resources.GetBuiltinResource<Font>("Arial.ttf");
-		            playerText.text=players[(i+j)%players.Count];
+		            playerText.alignment = TextAlignmentOptions.Midline;
+		            playerText.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+		            playerText.fontSharedMaterial = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - Drop Shadow");
 		            RectTransform rectTransform = playerText.GetComponent<RectTransform>();
 		            switch(j){
 		            	case 1:
