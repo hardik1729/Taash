@@ -9,55 +9,55 @@ using UnityEngine.Advertisements;
 
 public class Cards : MonoBehaviour
 {
-    // Start is called before the first frame update
-    string[] cards=new string[]{"SA","SK","SQ","SJ","S10","S9","S8","S7","S6","S5","S4","S3","S2",
+	// Start is called before the first frame update
+	string[] cards=new string[]{"SA","SK","SQ","SJ","S10","S9","S8","S7","S6","S5","S4","S3","S2",
 						"HA","HK","HQ","HJ","H10","H9","H8","H7","H6","H5","H4","H3","H2",
 						"CA","CK","CQ","CJ","C10","C9","C8","C7","C6","C5","C4","C3","C2",
 						"DA","DK","DQ","DJ","D10","D9","D8","D7","D6","D5","D4","D3","D2"};
 
-    GameObject TableObject;
-    GameObject UserObject;
-    Scrollbar s;
-    Button Next;
-    Button Prev;
+	GameObject TableObject;
+	GameObject UserObject;
+	Scrollbar s;
+	Button Next;
+	Button Prev;
 
-    void Start()
-    {
-        TableObject=GameObject.Find("TableObject");
-        UserObject=GameObject.Find("UserObject");
+	void Start()
+	{
+		TableObject=GameObject.Find("TableObject");
+		UserObject=GameObject.Find("UserObject");
 
-        s=GameObject.Find("Scrollbar").GetComponent<Scrollbar>();
-	    Next=GameObject.Find("Next").GetComponent<Button>();
-	    Prev=GameObject.Find("Previous").GetComponent<Button>();
-    }
+		s=GameObject.Find("Scrollbar").GetComponent<Scrollbar>();
+		Next=GameObject.Find("Next").GetComponent<Button>();
+		Prev=GameObject.Find("Previous").GetComponent<Button>();
+	}
 
-    float transparentColor=0;
+	float transparentColor=0;
 	float translucentColor1=0.25F;
 	float translucentColor2=0.5F;
 	float opaqueColor=1;
 
 	float startTime=0;
-    float holdTime=0.5F;
-    bool LongPressCard=false;
-    bool Decision=false;
-    // Update is called once per frame
-    void Update()
-    {
-        if(PlayerPrefs.GetString("UserCards")=="Start" || PlayerPrefs.GetString("UserCards")=="" || PlayerPrefs.GetString("UserCards").Split(',').ToList().Count!=Count){
-        	if(PlayerPrefs.GetString("UserCards")!="Start" && PlayerPrefs.GetString("UserCards")!=""){
-	        	destroyCards();
-	        	displayCards();
-	        }else{
-	        	destroyCards();
-	        	Count=0;
-	        	count=0;
-	        	s.value=0;
-	        }
-        }
-        if(Input.GetKeyDown(KeyCode.Mouse0)
+	float holdTime=0.5F;
+	bool LongPressCard=false;
+	bool Decision=false;
+	// Update is called once per frame
+	void Update()
+	{
+		if(PlayerPrefs.GetString("UserCards")=="Start" || PlayerPrefs.GetString("UserCards")=="" || PlayerPrefs.GetString("UserCards").Split(',').ToList().Count!=Count){
+			if(PlayerPrefs.GetString("UserCards")!="Start" && PlayerPrefs.GetString("UserCards")!=""){
+				destroyCards();
+				displayCards();
+			}else{
+				destroyCards();
+				Count=0;
+				count=0;
+				s.value=0;
+			}
+		}
+		if(Input.GetKeyDown(KeyCode.Mouse0)
 			&& EventSystem.current.currentSelectedGameObject
-         	&& EventSystem.current.currentSelectedGameObject.name.Length<4
-         	&& Time.time-startTime>holdTime){
+			&& EventSystem.current.currentSelectedGameObject.name.Length<4
+			&& Time.time-startTime>holdTime){
 			startTime=Time.time;
 			Decision=true;
 			LongPressCard=true;
@@ -79,17 +79,16 @@ public class Cards : MonoBehaviour
 		if(s.enabled)
 			Advertisement.Banner.Hide();
 		else if(Advertisement.IsReady("banner")){
-            Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
-            Advertisement.Banner.Show("banner");  
+			Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
+			Advertisement.Banner.Show("banner");  
 		}
 
 		if(updateNav){
-    		updateNav=false;
-	        if(Count>MaxCards){
-	        	PlayerPrefs.SetString("BannerAd","No");
-	        	Next.enabled=true;
-	        	Prev.enabled=true;
-	        	s.enabled=true;
+			updateNav=false;
+			if(Count>MaxCards){
+				Next.enabled=true;
+				Prev.enabled=true;
+				s.enabled=true;
 				if(s.value>=1.0F*0/(Count-count+1) && s.value<=1.0F*(1)/(Count-count+1)){
 					Image imgP=Prev.image;
 					Color colorP=imgP.color;
@@ -120,9 +119,8 @@ public class Cards : MonoBehaviour
 				Color colorS=imgS.color;
 				colorS.a=opaqueColor;
 				imgS.color=colorS;
-		    }else{
-		    	PlayerPrefs.SetString("BannerAd","Yes");
-		    	Next.enabled=false;
+			}else{
+				Next.enabled=false;
 				Image imgN=Next.image;
 				Color colorN=imgN.color;
 				colorN.a=transparentColor;
@@ -143,34 +141,34 @@ public class Cards : MonoBehaviour
 				imgS.color=colorS;
 			}
 		}
-    }
+	}
 
-    float CardWidth=120;
+	float CardWidth=120;
 	float CardHeight=180;
 	float gap=45;
 	int MaxCards=13;
 
-    int Count=0;
+	int Count=0;
 	int count=0;
 	float start;
-    bool updateNav=true;
+	bool updateNav=true;
 
-    void destroyCards(){
-    	foreach (Transform child in UserObject.transform){
-		    if(child.gameObject.name[0]=='C' && child.gameObject.name.Length<=3)
-		    	Destroy(child.gameObject);
+	void destroyCards(){
+		foreach (Transform child in UserObject.transform){
+			if(child.gameObject.name[0]=='C' && child.gameObject.name.Length<=3)
+				Destroy(child.gameObject);
 		}
-    	updateNav=true;
-    }
+		updateNav=true;
+	}
 
-    void displayCards(){
-    	List<string> UserCards=PlayerPrefs.GetString("UserCards").Split(',').ToList();
+	void displayCards(){
+		List<string> UserCards=PlayerPrefs.GetString("UserCards").Split(',').ToList();
 		Count=UserCards.Count;
 		start=0;
 		count=Count;
 		PlayerPrefs.SetInt("CardNumSwap",-1);
 
-    	if(count>MaxCards){
+		if(count>MaxCards){
 			count=MaxCards;
 			s.size=1.0F*count/Count;
 		}else{
@@ -183,11 +181,11 @@ public class Cards : MonoBehaviour
 		start=start*(-1);
 
 		int i=Location();
-    	if(i!=-1){
-    		int j=0;
+		if(i!=-1){
+			int j=0;
 			foreach(string card in UserCards){
 				if(j>=i){
-	    			int idx=j-i;
+					int idx=j-i;
 					string name="";
 					if(card.Length==2)
 						name=name+card[1]+card[0];
@@ -204,8 +202,8 @@ public class Cards : MonoBehaviour
 					btn.image=img;
 					btn.onClick.AddListener(delegate { onClick(); });
 					RectTransform rectTransform = btn.GetComponent<RectTransform>();
-		        	rectTransform.localPosition = new Vector3(loc, 0, 0);
-		        	rectTransform.sizeDelta = new Vector2(CardWidth, CardHeight);
+					rectTransform.localPosition = new Vector3(loc, 0, 0);
+					rectTransform.sizeDelta = new Vector2(CardWidth, CardHeight);
 					idx=idx+1;
 					if(idx==MaxCards)
 						break;
@@ -214,88 +212,88 @@ public class Cards : MonoBehaviour
 			}
 		}
 		updateNav=true;
-    }
+	}
 
-    public void onClick(){
-    	List<string> UserCards=PlayerPrefs.GetString("UserCards").Split(',').ToList();
-    	int i=Location();
-    	int idx;
-    	string name=EventSystem.current.currentSelectedGameObject.name;
-    	if(name.Length==3){
-    		idx=10+(name[2]-48);
-    	}else{
-    		idx=name[1]-48;
-    	}
-    	if(PlayerPrefs.GetInt("CardNumSwap")!=-1)
-    	{
-    		StartCoroutine(PlayAudio("PlayCard"));
-    		string Card1=UserCards[PlayerPrefs.GetInt("CardNumSwap")];
-    		string Card2=UserCards[idx+i];
-    		UserCards[PlayerPrefs.GetInt("CardNumSwap")]=Card2;
-    		UserCards[idx+i]=Card1;
-    		PlayerPrefs.SetInt("CardNumSwap",-1);
-    		string combinedString = string.Join( ",", UserCards.ToArray() );
+	public void onClick(){
+		List<string> UserCards=PlayerPrefs.GetString("UserCards").Split(',').ToList();
+		int i=Location();
+		int idx;
+		string name=EventSystem.current.currentSelectedGameObject.name;
+		if(name.Length==3){
+			idx=10+(name[2]-48);
+		}else{
+			idx=name[1]-48;
+		}
+		if(PlayerPrefs.GetInt("CardNumSwap")!=-1)
+		{
+			StartCoroutine(PlayAudio("PlayCard"));
+			string Card1=UserCards[PlayerPrefs.GetInt("CardNumSwap")];
+			string Card2=UserCards[idx+i];
+			UserCards[PlayerPrefs.GetInt("CardNumSwap")]=Card2;
+			UserCards[idx+i]=Card1;
+			PlayerPrefs.SetInt("CardNumSwap",-1);
+			string combinedString = string.Join( ",", UserCards.ToArray() );
 			PlayerPrefs.SetString("UserCards",combinedString);
-    		Drag();
-    	}else{
-    		StartCoroutine(PlayAudio("PlayCard"));
-    		PlayerPrefs.SetInt("CardNumSwap",idx+i);
-    		GameObject c=GameObject.Find(name);
+			Drag();
+		}else{
+			StartCoroutine(PlayAudio("PlayCard"));
+			PlayerPrefs.SetInt("CardNumSwap",idx+i);
+			GameObject c=GameObject.Find(name);
 			Button btn = c.GetComponent<Button>();
 			RectTransform rectTransform = btn.GetComponent<RectTransform>();
 			rectTransform.Translate(0,50,0);
-    	}
-    }
+		}
+	}
 
-    public void onNext(){
-    	if(Next.image.color.a==opaqueColor){
-    		StartCoroutine(PlayAudio("PlayCard"));
-    		Shift(true);
-    		updateNav=true;
-    	}
-    }
-    
-    public void onPrev(){
-    	if(Prev.image.color.a==opaqueColor){
-    		StartCoroutine(PlayAudio("PlayCard"));
-    		Shift(false);
-    		updateNav=true;
-    	}
-    }
-    
-    int Location(){
-    	int i=0;
-    	for(;i<Count-count+1;i++){
-    		if(s.value>=1.0F*i/(Count-count+1) && s.value<=1.0F*(i+1)/(Count-count+1)){
-    			break;
-    		}
-    	}
-    	if(i==Count-count+1)
-    		return -1;
-    	return i;
-    }
-    
-    void Shift(bool x){
-    	int i=Location();
-    	if(x){
-    		i=i+1;
-    	}else{
-    		i=i-1;
-    	}
-    	s.value=(1.0F*i/(Count-count+1)+1.0F*(i+1)/(Count-count+1))/2;
-    	Drag();
-    	updateNav=true;
-    }
-    
-    public void Drag(){
-    	List<string> UserCards=PlayerPrefs.GetString("UserCards").Split(',').ToList();
-    	int i=Location();
-    	if(i!=-1){
-    		int j=0;
-	    	foreach(string card in UserCards){
-	    		if(j>=i){
-	    			int idx=j-i;
-	    			string name="";
+	public void onNext(){
+		if(Next.image.color.a==opaqueColor){
+			StartCoroutine(PlayAudio("PlayCard"));
+			Shift(true);
+			updateNav=true;
+		}
+	}
+	
+	public void onPrev(){
+		if(Prev.image.color.a==opaqueColor){
+			StartCoroutine(PlayAudio("PlayCard"));
+			Shift(false);
+			updateNav=true;
+		}
+	}
+	
+	int Location(){
+		int i=0;
+		for(;i<Count-count+1;i++){
+			if(s.value>=1.0F*i/(Count-count+1) && s.value<=1.0F*(i+1)/(Count-count+1)){
+				break;
+			}
+		}
+		if(i==Count-count+1)
+			return -1;
+		return i;
+	}
+	
+	void Shift(bool x){
+		int i=Location();
+		if(x){
+			i=i+1;
+		}else{
+			i=i-1;
+		}
+		s.value=(1.0F*i/(Count-count+1)+1.0F*(i+1)/(Count-count+1))/2;
+		Drag();
+		updateNav=true;
+	}
+	
+	public void Drag(){
+		List<string> UserCards=PlayerPrefs.GetString("UserCards").Split(',').ToList();
+		int i=Location();
+		if(i!=-1){
+			int j=0;
+			foreach(string card in UserCards){
+				if(j>=i){
+					int idx=j-i;
+					string name="";
 					if(card.Length==2)
 						name=name+card[1]+card[0];
 					else
@@ -316,17 +314,17 @@ public class Cards : MonoBehaviour
 					idx=idx+1;
 					if(idx==MaxCards)
 						break;
-		    	}
-		    	j=j+1;
-	    	}
-	    	updateNav=true;
-	  	}
-    }
+				}
+				j=j+1;
+			}
+			updateNav=true;
+		}
+	}
 
-    private IEnumerator PlayAudio (string name)
-    {
-        AudioSource audio = GameObject.Find(name).GetComponent<AudioSource>();
-        audio.Play();
-        yield return new WaitForSeconds(audio.clip.length);
-    }
+	private IEnumerator PlayAudio (string name)
+	{
+		AudioSource audio = GameObject.Find(name).GetComponent<AudioSource>();
+		audio.Play();
+		yield return new WaitForSeconds(audio.clip.length);
+	}
 }

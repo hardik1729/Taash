@@ -8,31 +8,31 @@ using UnityEngine.SceneManagement;
 
 public class Create : MonoBehaviour
 {
-    // Start is called before the first frame update
-    List<string> cards=new List<string>(new string[]{"SA","SK","SQ","SJ","S10","S9","S8","S7","S6","S5","S4","S3","S2",
-					    							 "HA","HK","HQ","HJ","H10","H9","H8","H7","H6","H5","H4","H3","H2",
-					    							 "CA","CK","CQ","CJ","C10","C9","C8","C7","C6","C5","C4","C3","C2",
-					    							 "DA","DK","DQ","DJ","D10","D9","D8","D7","D6","D5","D4","D3","D2"});
-    List<string> cardsUpto7=new List<string>(new string[]{"SA","SK","SQ","SJ","S10","S9","S8","S7",
-    													  "HA","HK","HQ","HJ","H10","H9","H8","H7",
-    													  "CA","CK","CQ","CJ","C10","C9","C8","C7",
-    													  "DA","DK","DQ","DJ","D10","D9","D8","D7"});
-    List<string> cardsAbove7=new List<string>(new string[]{"S6","S5","S4","S3","S2",
-    													   "H6","H5","H4","H3","H2",
-    													   "C6","C5","C4","C3","C2",
-    													   "D6","D5","D4","D3","D2"});
-    List<string> FinalDecks=new List<string>();
-    float width=75;
-    float height=112.5F;
-    float startX=-335;
-    float startY=550;
-    float WidthX=92.5F;
-    float WidthY=132.5F;
-    float ExtraWidthX=100;
-    Button SelectUpto7;
-    Button SelectAll;
-    Button Next;
-    Button NextDeck;
+	// Start is called before the first frame update
+	List<string> cards=new List<string>(new string[]{"SA","SK","SQ","SJ","S10","S9","S8","S7","S6","S5","S4","S3","S2",
+													 "HA","HK","HQ","HJ","H10","H9","H8","H7","H6","H5","H4","H3","H2",
+													 "CA","CK","CQ","CJ","C10","C9","C8","C7","C6","C5","C4","C3","C2",
+													 "DA","DK","DQ","DJ","D10","D9","D8","D7","D6","D5","D4","D3","D2"});
+	List<string> cardsUpto7=new List<string>(new string[]{"SA","SK","SQ","SJ","S10","S9","S8","S7",
+														  "HA","HK","HQ","HJ","H10","H9","H8","H7",
+														  "CA","CK","CQ","CJ","C10","C9","C8","C7",
+														  "DA","DK","DQ","DJ","D10","D9","D8","D7"});
+	List<string> cardsAbove7=new List<string>(new string[]{"S6","S5","S4","S3","S2",
+														   "H6","H5","H4","H3","H2",
+														   "C6","C5","C4","C3","C2",
+														   "D6","D5","D4","D3","D2"});
+	List<string> FinalDecks=new List<string>();
+	float width=75;
+	float height=112.5F;
+	float startX=-335;
+	float startY=550;
+	float WidthX=92.5F;
+	float WidthY=132.5F;
+	float ExtraWidthX=100;
+	Button SelectUpto7;
+	Button SelectAll;
+	Button Next;
+	Button NextDeck;
 	Button PrevDeck;
 	Text DeckNum;
 	int maxDeckNum=4;
@@ -48,18 +48,18 @@ public class Create : MonoBehaviour
 	float translucentColor2=0.5F;
 	float opaqueColor=1;
 
-    void Start()
-    {
-    	GameObject CardsObject=GameObject.Find("CardsGameObject");
-    	NextDeck=GameObject.Find("NextDeck").GetComponent<Button>();
-	    PrevDeck=GameObject.Find("PrevDeck").GetComponent<Button>();
-	    SelectUpto7=GameObject.Find("SelectUpto7").GetComponent<Button>();
-	    SelectAll=GameObject.Find("SelectAll").GetComponent<Button>();
-	    Next=GameObject.Find("Next").GetComponent<Button>();
-	    DeckNum=GameObject.Find("DeckNum").GetComponent<Text>();
-    	for(int i=0;i<4;i++){
-    		for(int j=0;j<13;j++){
-    			string name="";
+	void Start()
+	{
+		GameObject CardsObject=GameObject.Find("CardsGameObject");
+		NextDeck=GameObject.Find("NextDeck").GetComponent<Button>();
+		PrevDeck=GameObject.Find("PrevDeck").GetComponent<Button>();
+		SelectUpto7=GameObject.Find("SelectUpto7").GetComponent<Button>();
+		SelectAll=GameObject.Find("SelectAll").GetComponent<Button>();
+		Next=GameObject.Find("Next").GetComponent<Button>();
+		DeckNum=GameObject.Find("DeckNum").GetComponent<Text>();
+		for(int i=0;i<4;i++){
+			for(int j=0;j<13;j++){
+				string name="";
 				if(cards[13*i+j].Length==2)
 					name=name+cards[13*i+j][1]+cards[13*i+j][0];
 				else
@@ -77,7 +77,7 @@ public class Create : MonoBehaviour
 				Sprite TickSprite = Sprite.Create(SpriteTick, new Rect(0, 0, SpriteTick.width, SpriteTick.height),new Vector2(0,0),1);
 				TickImage.sprite=TickSprite;
 				RectTransform TickRectTransform = Tick.GetComponent<RectTransform>();
-	        	TickRectTransform.sizeDelta = new Vector2(width, width);
+				TickRectTransform.sizeDelta = new Vector2(width, width);
 				float locX;
 				float locY;
 				if(j<8){
@@ -92,30 +92,30 @@ public class Create : MonoBehaviour
 				btn.image=img;
 				btn.onClick.AddListener(delegate { onCard(); });
 				RectTransform rectTransform = btn.GetComponent<RectTransform>();
-	        	rectTransform.localPosition = new Vector3(locX, locY, 0);
-	        	rectTransform.sizeDelta = new Vector2(width, height);
-    		}
-    	}
-    	foreach(string card in cards){
+				rectTransform.localPosition = new Vector3(locX, locY, 0);
+				rectTransform.sizeDelta = new Vector2(width, height);
+			}
+		}
+		foreach(string card in cards){
 			Selection(card,false);
 		}
 		for(int i=0;i<maxDeckNum;i++){
 			FinalDecks.Add("");
 		}
-    }
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-    	Advertisement.Banner.Hide();
-    	if (Input.GetKeyDown(KeyCode.Escape)) {
-		    SceneManager.LoadScene("SampleScene");
+	// Update is called once per frame
+	void Update()
+	{
+		Advertisement.Banner.Hide();
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			SceneManager.LoadScene("SampleScene");
 		}
-    	if(updateSelectAll){
-    		updateSelectAll=false;
-		    bool highlight=true;
-		    foreach(string CardName in cards){
-		    	Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
+		if(updateSelectAll){
+			updateSelectAll=false;
+			bool highlight=true;
+			foreach(string CardName in cards){
+				Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
 				Color color = card.color;
 				if(color.a==opaqueColor){
 					highlight=false;
@@ -131,9 +131,9 @@ public class Create : MonoBehaviour
 				colorButton.a=translucentColor1;
 				button.color=colorButton;
 			}
-    	}
-    	if(updateSelectUpto7){
-    		updateSelectUpto7=false;
+		}
+		if(updateSelectUpto7){
+			updateSelectUpto7=false;
 			bool highlight=true;
 			foreach(string CardName in cardsUpto7){
 				Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
@@ -145,7 +145,7 @@ public class Create : MonoBehaviour
 			}
 			if(highlight){
 				foreach(string CardName in cardsAbove7){
-				   	Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
+					Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
 					Color color = card.color;
 					if(color.a==translucentColor2){
 						highlight=false;
@@ -162,10 +162,10 @@ public class Create : MonoBehaviour
 				colorButton.a=translucentColor1;
 				button.color=colorButton;
 			}
-    	}
-    	if(updateArrow){
-    		updateArrow=false;
-        	if(DeckNum.text[0]-48==1){
+		}
+		if(updateArrow){
+			updateArrow=false;
+			if(DeckNum.text[0]-48==1){
 				Image imgP=PrevDeck.image;
 				Color colorP=imgP.color;
 				colorP.a=translucentColor1;
@@ -200,9 +200,9 @@ public class Create : MonoBehaviour
 			}
 		}
 		if(updateNext){
-    		updateNext=false;
-		    bool highlight=false;
-		    foreach(string deck in FinalDecks){
+			updateNext=false;
+			bool highlight=false;
+			foreach(string deck in FinalDecks){
 				foreach(char c in deck){
 					if(c=='1'){
 						highlight=true;
@@ -221,10 +221,10 @@ public class Create : MonoBehaviour
 				colorButton.a=translucentColor1;
 				button.color=colorButton;
 			}
-    	}
-    }
-    
-    public void onNext(){
+		}
+	}
+	
+	public void onNext(){
 		if(Next.image.color.a==opaqueColor){
 			List<string> messages=new List<string>();
 			foreach(string deck in FinalDecks){
@@ -249,13 +249,13 @@ public class Create : MonoBehaviour
 			PlayerPrefs.SetString("Cards",combinedString);
 			StartCoroutine(PlayAudio(true));
 		}
-    }
+	}
 
-    public void onSelectAll(){
-    	StartCoroutine(PlayAudio(false));
-	    bool allSelected=true;
-	    foreach(string CardName in cards){
-		   	Image card=GameObject.Find(CardName).GetComponent<Button>().image;
+	public void onSelectAll(){
+		StartCoroutine(PlayAudio(false));
+		bool allSelected=true;
+		foreach(string CardName in cards){
+			Image card=GameObject.Find(CardName).GetComponent<Button>().image;
 			Color color = card.color;
 			Image cardTick=GameObject.Find("Tick"+CardName).GetComponent<Image>(); 
 			Color colorTick = cardTick.color;
@@ -269,44 +269,7 @@ public class Create : MonoBehaviour
 		}
 		if(allSelected){
 			foreach(string card in cards){
-		    	Selection(card,false);
-			}
-		}
-		updateDeck=true;
-		updateNext=true;
-		updateSelectUpto7=true;
-		updateSelectAll=true;
-    }
-
-    public void onSelectUpto7(){
-    	StartCoroutine(PlayAudio(false));
-	    bool selected7=true;
-	    foreach(string CardName in cardsUpto7){
-	    	Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
-			Color color = card.color;
-			if(color.a==opaqueColor)
-				selected7=false;
-		}
-		foreach(string CardName in cardsAbove7){
-		   	Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
-			Color color = card.color;
-			if(color.a==translucentColor2)
-				selected7=false;
-		}
-		
-	    if(selected7){
-	    	foreach(string card in cardsUpto7){
-		   		Selection(card,false);
-			}
-			foreach(string card in cardsAbove7){
-			    Selection(card,false);
-			}
-    	}else{
-	    	foreach(string card in cardsUpto7){
-			  	Selection(card,true);
-			}
-			foreach(string card in cardsAbove7){
-			   	Selection(card,false);
+				Selection(card,false);
 			}
 		}
 		updateDeck=true;
@@ -315,10 +278,47 @@ public class Create : MonoBehaviour
 		updateSelectAll=true;
 	}
 
-    public void onNextDeck(){
-    	if(NextDeck.image.color.a==opaqueColor){
-    		StartCoroutine(PlayAudio(false));
-    		foreach(string card in cards){
+	public void onSelectUpto7(){
+		StartCoroutine(PlayAudio(false));
+		bool selected7=true;
+		foreach(string CardName in cardsUpto7){
+			Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
+			Color color = card.color;
+			if(color.a==opaqueColor)
+				selected7=false;
+		}
+		foreach(string CardName in cardsAbove7){
+			Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
+			Color color = card.color;
+			if(color.a==translucentColor2)
+				selected7=false;
+		}
+		
+		if(selected7){
+			foreach(string card in cardsUpto7){
+				Selection(card,false);
+			}
+			foreach(string card in cardsAbove7){
+				Selection(card,false);
+			}
+		}else{
+			foreach(string card in cardsUpto7){
+				Selection(card,true);
+			}
+			foreach(string card in cardsAbove7){
+				Selection(card,false);
+			}
+		}
+		updateDeck=true;
+		updateNext=true;
+		updateSelectUpto7=true;
+		updateSelectAll=true;
+	}
+
+	public void onNextDeck(){
+		if(NextDeck.image.color.a==opaqueColor){
+			StartCoroutine(PlayAudio(false));
+			foreach(string card in cards){
 				Selection(card,false);
 			}
 			DeckNum.text=(DeckNum.text[0]-48+1).ToString();
@@ -333,13 +333,13 @@ public class Create : MonoBehaviour
 			updateSelectUpto7=true;
 			updateSelectAll=true;
 			updateArrow=true;
-    	}
-    }
+		}
+	}
 
-    public void onPrevDeck(){
-    	if(PrevDeck.image.color.a==opaqueColor){
-    		StartCoroutine(PlayAudio(false));
-    		foreach(string card in cards){
+	public void onPrevDeck(){
+		if(PrevDeck.image.color.a==opaqueColor){
+			StartCoroutine(PlayAudio(false));
+			foreach(string card in cards){
 				Selection(card,false);
 			}
 			DeckNum.text=(DeckNum.text[0]-48-1).ToString();
@@ -353,12 +353,12 @@ public class Create : MonoBehaviour
 			updateSelectUpto7=true;
 			updateSelectAll=true;
 			updateArrow=true;
-    	}
-    }
+		}
+	}
 
-    public void Selection(string CardName,bool select){
-    	if(select){
-    		Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
+	public void Selection(string CardName,bool select){
+		if(select){
+			Image card=GameObject.Find(CardName).GetComponent<Button>().image; 
 			Color color = card.color;
 			color.a=translucentColor2;
 			card.color=color;
@@ -378,12 +378,12 @@ public class Create : MonoBehaviour
 			colorTick.a=transparentColor;
 			cardTick.color=colorTick;
 		}
-    }
+	}
 
-    public void onCard(){
-    	StartCoroutine(PlayAudio(false));
-    	string name=EventSystem.current.currentSelectedGameObject.name;
-    	Image card=GameObject.Find(name).GetComponent<Button>().image; 
+	public void onCard(){
+		StartCoroutine(PlayAudio(false));
+		string name=EventSystem.current.currentSelectedGameObject.name;
+		Image card=GameObject.Find(name).GetComponent<Button>().image; 
 		Color color = card.color;
 		if(color.a==opaqueColor)
 			color.a=translucentColor2;
@@ -402,14 +402,14 @@ public class Create : MonoBehaviour
 		updateNext=true;
 		updateSelectUpto7=true;
 		updateSelectAll=true;
-    }
+	}
 
-    private IEnumerator PlayAudio (bool sceneChange)
-    {
-        AudioSource audio = GameObject.Find("Click").GetComponent<AudioSource>();
-        audio.Play();
-        yield return new WaitForSeconds(audio.clip.length);
-        if(sceneChange)
-        	SceneManager.LoadScene("RoomScene");
-    }
+	private IEnumerator PlayAudio (bool sceneChange)
+	{
+		AudioSource audio = GameObject.Find("Click").GetComponent<AudioSource>();
+		audio.Play();
+		yield return new WaitForSeconds(audio.clip.length);
+		if(sceneChange)
+			SceneManager.LoadScene("RoomScene");
+	}
 }

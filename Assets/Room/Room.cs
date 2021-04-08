@@ -12,13 +12,13 @@ using TMPro;
 
 public class Room : MonoBehaviour
 {
-    // Start is called before the first frame update
-    GameObject LobbyObj;
-    GameObject GameObj;
-    
-    Client _client = new Client();
+	// Start is called before the first frame update
+	GameObject LobbyObj;
+	GameObject GameObj;
+	
+	Client _client = new Client();
 
-    string _tokenIssuer="hardik8714-ta23-dev";
+	string _tokenIssuer="hardik8714-ta23-dev";
 	string _tokenDomain="mt1s.vivox.com";
 	Uri _serverUri=new Uri("https://mt1s.www.vivox.com/api2");
 	string _tokenKey="pump117";
@@ -32,48 +32,48 @@ public class Room : MonoBehaviour
 
 	string[] UserColor=new string[]{"#FF0000","#00FF00","#0000FF","#FFFF00"};
 
-    void Start()
-    {
-        LobbyObj=GameObject.Find("LobbyCanvas");
+	void Start()
+	{
+		LobbyObj=GameObject.Find("LobbyCanvas");
 		GameObj=GameObject.Find("GameCanvas");
 		
 		_client.Initialize();
-        GameObject.Find("Logout").GetComponent<Button>().enabled=false;
-        GameObject.Find("Logout").GetComponent<Button>().interactable=false;
-        GameObject.Find("ChannelName").GetComponent<InputField>().enabled=false;
-        GameObject.Find("ChannelName").GetComponent<InputField>().interactable=false;
-        GameObject.Find("Create").GetComponent<Button>().enabled=false;
-        GameObject.Find("Create").GetComponent<Button>().interactable=false;
-        GameObject.Find("Delete").GetComponent<Button>().enabled=false;
-        GameObject.Find("Delete").GetComponent<Button>().interactable=false;
-        GameObject.Find("Start").GetComponent<Button>().enabled=false;
-        GameObject.Find("Start").GetComponent<Button>().interactable=false;
-        if(PlayerPrefs.GetString("Mode")=="Connect"){
-        	GameObject.Find("CreateText").GetComponent<Text>().text="Join";
-        	GameObject.Find("DeleteText").GetComponent<Text>().text="Leave";
-        	GameObject.Find("Start").GetComponent<RectTransform>().sizeDelta=new Vector2(0,0);
-        }
+		GameObject.Find("Logout").GetComponent<Button>().enabled=false;
+		GameObject.Find("Logout").GetComponent<Button>().interactable=false;
+		GameObject.Find("ChannelName").GetComponent<InputField>().enabled=false;
+		GameObject.Find("ChannelName").GetComponent<InputField>().interactable=false;
+		GameObject.Find("Create").GetComponent<Button>().enabled=false;
+		GameObject.Find("Create").GetComponent<Button>().interactable=false;
+		GameObject.Find("Delete").GetComponent<Button>().enabled=false;
+		GameObject.Find("Delete").GetComponent<Button>().interactable=false;
+		GameObject.Find("Start").GetComponent<Button>().enabled=false;
+		GameObject.Find("Start").GetComponent<Button>().interactable=false;
+		if(PlayerPrefs.GetString("Mode")=="Connect"){
+			GameObject.Find("CreateText").GetComponent<Text>().text="Join";
+			GameObject.Find("DeleteText").GetComponent<Text>().text="Leave";
+			GameObject.Find("Start").GetComponent<RectTransform>().sizeDelta=new Vector2(0,0);
+		}
 		GameObj.GetComponent<RectTransform>().localScale=new Vector3(0,0,0);
 		PlayerPrefs.SetString("Send","");
 		PlayerPrefs.SetString("Recieved","");
-    }
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-    	if(PlayerPrefs.GetString("Mode")=="Create"){
-	    	if(GameObject.Find("players").GetComponent<Text>().text.Split(',').ToList().Count>4){
-	    		GameObject.Find("Start").GetComponent<Button>().enabled=false;
-	        	GameObject.Find("Start").GetComponent<Button>().interactable=false;
-	    	}else if(GameObject.Find("players").GetComponent<Text>().text!=""){
-	    		GameObject.Find("Start").GetComponent<Button>().enabled=true;
-		        GameObject.Find("Start").GetComponent<Button>().interactable=true;
-	    	}else if(GameObject.Find("players").GetComponent<Text>().text==""){
-	    		GameObject.Find("Start").GetComponent<Button>().enabled=false;
-		        GameObject.Find("Start").GetComponent<Button>().interactable=false;
-	    	}
-	    }
-        if(Input.GetKeyDown(KeyCode.Escape)){
+	// Update is called once per frame
+	void Update()
+	{
+		if(PlayerPrefs.GetString("Mode")=="Create"){
+			if(GameObject.Find("players").GetComponent<Text>().text.Split(',').ToList().Count>4){
+				GameObject.Find("Start").GetComponent<Button>().enabled=false;
+				GameObject.Find("Start").GetComponent<Button>().interactable=false;
+			}else if(GameObject.Find("players").GetComponent<Text>().text!=""){
+				GameObject.Find("Start").GetComponent<Button>().enabled=true;
+				GameObject.Find("Start").GetComponent<Button>().interactable=true;
+			}else if(GameObject.Find("players").GetComponent<Text>().text==""){
+				GameObject.Find("Start").GetComponent<Button>().enabled=false;
+				GameObject.Find("Start").GetComponent<Button>().interactable=false;
+			}
+		}
+		if(Input.GetKeyDown(KeyCode.Escape)){
 			if(Time.time-escapeTime<1 || LobbyObj.GetComponent<RectTransform>().localScale!=new Vector3(0,0,0)){
 				if(LoggedIn)
 					Application.Quit();
@@ -106,15 +106,15 @@ public class Room : MonoBehaviour
 					PlayerPrefs.SetString("Recieved","");
 				}
 				else if("Order"==message.Split(':').ToList()[0]){
-		        	GameObject.Find("players").GetComponent<Text>().text=message.Split(':').ToList()[1];
-		        	destroyNames();
-	    	    	PlayerPrefs.SetString("Players",GameObject.Find("players").GetComponent<Text>().text);
+					GameObject.Find("players").GetComponent<Text>().text=message.Split(':').ToList()[1];
+					destroyNames();
+					PlayerPrefs.SetString("Players",GameObject.Find("players").GetComponent<Text>().text);
 					displayNames();
-	    	    	PlayerPrefs.SetString("Recieved","");
-	    	    	if (Advertisement.IsReady("interstitial"))
-			            Advertisement.Show("interstitial");
-	    	    }
-	    	}
+					PlayerPrefs.SetString("Recieved","");
+					if (Advertisement.IsReady("interstitial"))
+						Advertisement.Show("interstitial");
+				}
+			}
 		}
 		if(PlayerPrefs.GetString("Send")!=""){
 			List<string> messages=PlayerPrefs.GetString("Send").Split(';').ToList();
@@ -122,335 +122,335 @@ public class Room : MonoBehaviour
 			foreach(string message in messages)
 				SendGroupMessage(message);
 		}
-    }
-
-    private void onLoginSessionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-	{
-	    if ("State" == propertyChangedEventArgs.PropertyName)
-	    {
-	        switch ((sender as ILoginSession).State)
-	        {
-	            case LoginState.LoggingIn:
-	                // Operations as needed 
-	            break;
-	            
-	            case LoginState.LoggedIn:
-	            	GameObject.Find("Login").GetComponent<Button>().enabled=false;
-			        GameObject.Find("Login").GetComponent<Button>().interactable=false;
-			        GameObject.Find("UserName").GetComponent<InputField>().enabled=false;
-			        GameObject.Find("UserName").GetComponent<InputField>().interactable=false;
-			        GameObject.Find("Logout").GetComponent<Button>().enabled=true;
-			        GameObject.Find("Logout").GetComponent<Button>().interactable=true;
-
-			        GameObject.Find("ChannelName").GetComponent<InputField>().enabled=true;
-			        GameObject.Find("ChannelName").GetComponent<InputField>().interactable=true;
-			        GameObject.Find("Create").GetComponent<Button>().enabled=true;
-			        GameObject.Find("Create").GetComponent<Button>().interactable=true;
-			        GameObject.Find("Delete").GetComponent<Button>().enabled=false;
-			        GameObject.Find("Delete").GetComponent<Button>().interactable=false;
-			        LoggedIn=true;
-	                // Operations as needed 
-	            break;	
-	
-	            case LoginState.LoggedOut:
-	                // Operations as needed 
-	            break;
-	            default:
-	            break;
-	        }	
-	    }
 	}
 
-    public void Login(){
-    	StartCoroutine(PlayAudio("Click"));
-    	string username=GameObject.Find("UserNameText").GetComponent<Text>().text;
-    	AccountId accountId = new AccountId(_tokenIssuer, username, _tokenDomain);
-	    _loginSession = _client.GetLoginSession(accountId);
-	    _loginSession.PropertyChanged += onLoginSessionPropertyChanged;
-	    _loginSession.BeginLogin(_serverUri, _loginSession.GetLoginToken(_tokenKey,_tokenExpiration), ar => 
-        {
-            try
-            {
-                _loginSession.EndLogin(ar);
-            }
-            catch (Exception e)
-            {
-                // Handle error 
-                return;
-            }
-            // At this point, login is successful and other operations can be performed.
-        });
-    }
+	private void onLoginSessionPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+	{
+		if ("State" == propertyChangedEventArgs.PropertyName)
+		{
+			switch ((sender as ILoginSession).State)
+			{
+				case LoginState.LoggingIn:
+					// Operations as needed 
+				break;
+				
+				case LoginState.LoggedIn:
+					GameObject.Find("Login").GetComponent<Button>().enabled=false;
+					GameObject.Find("Login").GetComponent<Button>().interactable=false;
+					GameObject.Find("UserName").GetComponent<InputField>().enabled=false;
+					GameObject.Find("UserName").GetComponent<InputField>().interactable=false;
+					GameObject.Find("Logout").GetComponent<Button>().enabled=true;
+					GameObject.Find("Logout").GetComponent<Button>().interactable=true;
 
-    public void Logout(){
-    	StartCoroutine(PlayAudio("Click"));
-    	_loginSession.Logout();
-    	_loginSession.PropertyChanged -= onLoginSessionPropertyChanged;
+					GameObject.Find("ChannelName").GetComponent<InputField>().enabled=true;
+					GameObject.Find("ChannelName").GetComponent<InputField>().interactable=true;
+					GameObject.Find("Create").GetComponent<Button>().enabled=true;
+					GameObject.Find("Create").GetComponent<Button>().interactable=true;
+					GameObject.Find("Delete").GetComponent<Button>().enabled=false;
+					GameObject.Find("Delete").GetComponent<Button>().interactable=false;
+					LoggedIn=true;
+					// Operations as needed 
+				break;	
+	
+				case LoginState.LoggedOut:
+					// Operations as needed 
+				break;
+				default:
+				break;
+			}	
+		}
+	}
 
-    	GameObject.Find("Login").GetComponent<Button>().enabled=true;
-    	GameObject.Find("Login").GetComponent<Button>().interactable=true;
-        GameObject.Find("UserName").GetComponent<InputField>().enabled=true;
-        GameObject.Find("UserName").GetComponent<InputField>().interactable=true;
-        GameObject.Find("Logout").GetComponent<Button>().enabled=false;
-        GameObject.Find("Logout").GetComponent<Button>().interactable=false;
+	public void Login(){
+		StartCoroutine(PlayAudio("Click"));
+		string username=GameObject.Find("UserNameText").GetComponent<Text>().text;
+		AccountId accountId = new AccountId(_tokenIssuer, username, _tokenDomain);
+		_loginSession = _client.GetLoginSession(accountId);
+		_loginSession.PropertyChanged += onLoginSessionPropertyChanged;
+		_loginSession.BeginLogin(_serverUri, _loginSession.GetLoginToken(_tokenKey,_tokenExpiration), ar => 
+		{
+			try
+			{
+				_loginSession.EndLogin(ar);
+			}
+			catch (Exception e)
+			{
+				// Handle error 
+				return;
+			}
+			// At this point, login is successful and other operations can be performed.
+		});
+	}
 
-        GameObject.Find("ChannelName").GetComponent<InputField>().enabled=false;
-        GameObject.Find("ChannelName").GetComponent<InputField>().interactable=false;
-        GameObject.Find("Create").GetComponent<Button>().enabled=false;
-        GameObject.Find("Create").GetComponent<Button>().interactable=false;
-        GameObject.Find("Delete").GetComponent<Button>().enabled=false;
-        GameObject.Find("Delete").GetComponent<Button>().interactable=false;
-    }
+	public void Logout(){
+		StartCoroutine(PlayAudio("Click"));
+		_loginSession.Logout();
+		_loginSession.PropertyChanged -= onLoginSessionPropertyChanged;
 
-    private void SourceOnChannelPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs) {
-	    // This example only checks for TextState changes. 
-	    if (propertyChangedEventArgs.PropertyName == "AudioState") 
-	    {
-	        switch (_channelSession.AudioState) 
-	        {
-	            case ConnectionState.Connecting:
-	            	Debug.Log("Audio connecting in " + _channelSession.Key.Name); 
-	            break;
-	            
+		GameObject.Find("Login").GetComponent<Button>().enabled=true;
+		GameObject.Find("Login").GetComponent<Button>().interactable=true;
+		GameObject.Find("UserName").GetComponent<InputField>().enabled=true;
+		GameObject.Find("UserName").GetComponent<InputField>().interactable=true;
+		GameObject.Find("Logout").GetComponent<Button>().enabled=false;
+		GameObject.Find("Logout").GetComponent<Button>().interactable=false;
+
+		GameObject.Find("ChannelName").GetComponent<InputField>().enabled=false;
+		GameObject.Find("ChannelName").GetComponent<InputField>().interactable=false;
+		GameObject.Find("Create").GetComponent<Button>().enabled=false;
+		GameObject.Find("Create").GetComponent<Button>().interactable=false;
+		GameObject.Find("Delete").GetComponent<Button>().enabled=false;
+		GameObject.Find("Delete").GetComponent<Button>().interactable=false;
+	}
+
+	private void SourceOnChannelPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs) {
+		// This example only checks for TextState changes. 
+		if (propertyChangedEventArgs.PropertyName == "AudioState") 
+		{
+			switch (_channelSession.AudioState) 
+			{
+				case ConnectionState.Connecting:
+					Debug.Log("Audio connecting in " + _channelSession.Key.Name); 
+				break;
+				
 				case ConnectionState.Connected:
-	            	Debug.Log("Audio connected in " + _channelSession.Key.Name); 
-	            break;
-	            
+					Debug.Log("Audio connected in " + _channelSession.Key.Name); 
+				break;
+				
 				case ConnectionState.Disconnecting:
-	            	Debug.Log("Audio disconnecting in " + _channelSession.Key.Name); 
-	            break;
-	            
+					Debug.Log("Audio disconnecting in " + _channelSession.Key.Name); 
+				break;
+				
 				case ConnectionState.Disconnected:
-	            	Debug.Log("Audio disconnected in " + _channelSession.Key.Name); 
-	            break;
-	        }
-	    }
-	    if (propertyChangedEventArgs.PropertyName == "TextState") 
-	    {
-	        switch (_channelSession.TextState) 
-	        {
-	            case ConnectionState.Connecting:
-	            	Debug.Log("Text connecting in " + _channelSession.Key.Name); 
-	            break;
-	            
+					Debug.Log("Audio disconnected in " + _channelSession.Key.Name); 
+				break;
+			}
+		}
+		if (propertyChangedEventArgs.PropertyName == "TextState") 
+		{
+			switch (_channelSession.TextState) 
+			{
+				case ConnectionState.Connecting:
+					Debug.Log("Text connecting in " + _channelSession.Key.Name); 
+				break;
+				
 				case ConnectionState.Connected:
 					GameObject.Find("Login").GetComponent<Button>().enabled=false;
-			    	GameObject.Find("Login").GetComponent<Button>().interactable=false;
-			        GameObject.Find("UserName").GetComponent<InputField>().enabled=false;
-			        GameObject.Find("UserName").GetComponent<InputField>().interactable=false;
-				    GameObject.Find("Logout").GetComponent<Button>().enabled=false;
-			        GameObject.Find("Logout").GetComponent<Button>().interactable=false;
+					GameObject.Find("Login").GetComponent<Button>().interactable=false;
+					GameObject.Find("UserName").GetComponent<InputField>().enabled=false;
+					GameObject.Find("UserName").GetComponent<InputField>().interactable=false;
+					GameObject.Find("Logout").GetComponent<Button>().enabled=false;
+					GameObject.Find("Logout").GetComponent<Button>().interactable=false;
 
-			        GameObject.Find("ChannelName").GetComponent<InputField>().enabled=false;
-			        GameObject.Find("ChannelName").GetComponent<InputField>().interactable=false;
-			        GameObject.Find("Create").GetComponent<Button>().enabled=false;
-			        GameObject.Find("Create").GetComponent<Button>().interactable=false;
-			        GameObject.Find("Delete").GetComponent<Button>().enabled=true;
-			        GameObject.Find("Delete").GetComponent<Button>().interactable=true;
-		            Debug.Log("Text connected in " + _channelSession.Key.Name); 
-	            break;
-	            
+					GameObject.Find("ChannelName").GetComponent<InputField>().enabled=false;
+					GameObject.Find("ChannelName").GetComponent<InputField>().interactable=false;
+					GameObject.Find("Create").GetComponent<Button>().enabled=false;
+					GameObject.Find("Create").GetComponent<Button>().interactable=false;
+					GameObject.Find("Delete").GetComponent<Button>().enabled=true;
+					GameObject.Find("Delete").GetComponent<Button>().interactable=true;
+					Debug.Log("Text connected in " + _channelSession.Key.Name); 
+				break;
+				
 				case ConnectionState.Disconnecting:
-	            	Debug.Log("Text disconnecting in " + _channelSession.Key.Name); 
-	            break;
-	            
+					Debug.Log("Text disconnecting in " + _channelSession.Key.Name); 
+				break;
+				
 				case ConnectionState.Disconnected:
-	            	Debug.Log("Text disconnected in " + _channelSession.Key.Name); 
-	            break;
-	        }
-	    }
+					Debug.Log("Text disconnected in " + _channelSession.Key.Name); 
+				break;
+			}
+		}
 	}
 
-    public void Create(){
-    	StartCoroutine(PlayAudio("Click"));
-    	string channelname=GameObject.Find("ChannelNameText").GetComponent<Text>().text;
-    	ChannelId channelId = new ChannelId(_tokenIssuer, channelname, _tokenDomain, ChannelType.NonPositional);
-	    _channelSession = _loginSession.GetChannelSession(channelId);
-	    _channelSession.PropertyChanged += SourceOnChannelPropertyChanged;
-	    _channelSession.BeginConnect(true, true, true, _channelSession.GetConnectToken(_tokenKey,_tokenExpiration), ar => 
-        {
-            try
-            {
-                _channelSession.EndConnect(ar);
-            }
-            catch (Exception e)
-            {
-                // Handle error 
-                return;
-            }
-            // At this point, login is successful and other operations can be performed.
-        });
-        BindChannelSessionHandlers(true);
-    }
+	public void Create(){
+		StartCoroutine(PlayAudio("Click"));
+		string channelname=GameObject.Find("ChannelNameText").GetComponent<Text>().text;
+		ChannelId channelId = new ChannelId(_tokenIssuer, channelname, _tokenDomain, ChannelType.NonPositional);
+		_channelSession = _loginSession.GetChannelSession(channelId);
+		_channelSession.PropertyChanged += SourceOnChannelPropertyChanged;
+		_channelSession.BeginConnect(true, true, true, _channelSession.GetConnectToken(_tokenKey,_tokenExpiration), ar => 
+		{
+			try
+			{
+				_channelSession.EndConnect(ar);
+			}
+			catch (Exception e)
+			{
+				// Handle error 
+				return;
+			}
+			// At this point, login is successful and other operations can be performed.
+		});
+		BindChannelSessionHandlers(true);
+	}
 
-    public void Delete(){
-    	StartCoroutine(PlayAudio("Click"));
-    	string channelname=GameObject.Find("ChannelNameText").GetComponent<Text>().text;
-    	ChannelId channelId = new ChannelId(_tokenIssuer, channelname, _tokenDomain, ChannelType.NonPositional);
-    	_channelSession.Disconnect();
-    	_loginSession.DeleteChannelSession(channelId);
-    	_channelSession.PropertyChanged -= SourceOnChannelPropertyChanged;
-    	BindChannelSessionHandlers(false);
-    	GameObject.Find("players").GetComponent<Text>().text="";
+	public void Delete(){
+		StartCoroutine(PlayAudio("Click"));
+		string channelname=GameObject.Find("ChannelNameText").GetComponent<Text>().text;
+		ChannelId channelId = new ChannelId(_tokenIssuer, channelname, _tokenDomain, ChannelType.NonPositional);
+		_channelSession.Disconnect();
+		_loginSession.DeleteChannelSession(channelId);
+		_channelSession.PropertyChanged -= SourceOnChannelPropertyChanged;
+		BindChannelSessionHandlers(false);
+		GameObject.Find("players").GetComponent<Text>().text="";
 
-    	GameObject.Find("Login").GetComponent<Button>().enabled=false;
-    	GameObject.Find("Login").GetComponent<Button>().interactable=false;
-        GameObject.Find("UserName").GetComponent<InputField>().enabled=false;
-        GameObject.Find("UserName").GetComponent<InputField>().interactable=false;
-    	GameObject.Find("Logout").GetComponent<Button>().enabled=true;
-        GameObject.Find("Logout").GetComponent<Button>().interactable=true;
+		GameObject.Find("Login").GetComponent<Button>().enabled=false;
+		GameObject.Find("Login").GetComponent<Button>().interactable=false;
+		GameObject.Find("UserName").GetComponent<InputField>().enabled=false;
+		GameObject.Find("UserName").GetComponent<InputField>().interactable=false;
+		GameObject.Find("Logout").GetComponent<Button>().enabled=true;
+		GameObject.Find("Logout").GetComponent<Button>().interactable=true;
 
-        GameObject.Find("ChannelName").GetComponent<InputField>().enabled=true;
-        GameObject.Find("ChannelName").GetComponent<InputField>().interactable=true;
-        GameObject.Find("Create").GetComponent<Button>().enabled=true;
-        GameObject.Find("Create").GetComponent<Button>().interactable=true;
-        GameObject.Find("Delete").GetComponent<Button>().enabled=false;
-        GameObject.Find("Delete").GetComponent<Button>().interactable=false;
+		GameObject.Find("ChannelName").GetComponent<InputField>().enabled=true;
+		GameObject.Find("ChannelName").GetComponent<InputField>().interactable=true;
+		GameObject.Find("Create").GetComponent<Button>().enabled=true;
+		GameObject.Find("Create").GetComponent<Button>().interactable=true;
+		GameObject.Find("Delete").GetComponent<Button>().enabled=false;
+		GameObject.Find("Delete").GetComponent<Button>().interactable=false;
 
-        if(PlayerPrefs.GetString("Mode")=="Create"){
-        	GameObject.Find("Start").GetComponent<Button>().enabled=false;
-        	GameObject.Find("Start").GetComponent<Button>().interactable=false;
-        }
-    }
+		if(PlayerPrefs.GetString("Mode")=="Create"){
+			GameObject.Find("Start").GetComponent<Button>().enabled=false;
+			GameObject.Find("Start").GetComponent<Button>().interactable=false;
+		}
+	}
 
-    private static void ValidateArgs(object[] objs)
+	private static void ValidateArgs(object[] objs)
 	{			
-	    foreach (var obj in objs)		
-	    {	
-	        if (obj == null)
-	            throw new ArgumentNullException(obj.GetType().ToString(), "Specify a non-null/non-empty argument.");
-	    }
+		foreach (var obj in objs)		
+		{	
+			if (obj == null)
+				throw new ArgumentNullException(obj.GetType().ToString(), "Specify a non-null/non-empty argument.");
+		}
 	}
 
-    private void OnParticipantAdded(object sender, KeyEventArg<string> keyEventArg)
+	private void OnParticipantAdded(object sender, KeyEventArg<string> keyEventArg)
 	{
 		StartCoroutine(PlayAudio("PlayCard"));
-	    ValidateArgs(new object[] { sender, keyEventArg });
+		ValidateArgs(new object[] { sender, keyEventArg });
 		
-	    var source = (VivoxUnity.IReadOnlyDictionary<string, IParticipant>)sender;	
-	    var participant = source[keyEventArg.Key];
-	    var username = participant.Account.Name;
-	    var channel = participant.ParentChannelSession.Key;
-	    var channelSession = participant.ParentChannelSession;
-	    //Do what you want with the information
-	    Text playersText=GameObject.Find("players").GetComponent<Text>();
-	    if(playersText.text=="")
-	    	playersText.text=username;
-	    else
-	    	playersText.text=playersText.text+","+username;
+		var source = (VivoxUnity.IReadOnlyDictionary<string, IParticipant>)sender;	
+		var participant = source[keyEventArg.Key];
+		var username = participant.Account.Name;
+		var channel = participant.ParentChannelSession.Key;
+		var channelSession = participant.ParentChannelSession;
+		//Do what you want with the information
+		Text playersText=GameObject.Find("players").GetComponent<Text>();
+		if(playersText.text=="")
+			playersText.text=username;
+		else
+			playersText.text=playersText.text+","+username;
 	}
 
 	private void OnParticipantRemoved(object sender, KeyEventArg<string> keyEventArg)
 	{
 		StartCoroutine(PlayAudio("PlayCard"));
-	    ValidateArgs(new object[] { sender, keyEventArg });
+		ValidateArgs(new object[] { sender, keyEventArg });
 				
-	    var source = (VivoxUnity.IReadOnlyDictionary<string, IParticipant>)sender;		
-	    var participant = source[keyEventArg.Key];
-	    var username = participant.Account.Name;
-	    var channel = participant.ParentChannelSession.Key;
-	    var channelSession = participant.ParentChannelSession;
-	    Text playersText=GameObject.Find("players").GetComponent<Text>();
-	    List<string> playersTextList=playersText.text.Split(',').ToList();
-	    playersTextList.Remove(username);
-	    playersText.text=string.Join( ",", playersTextList.ToArray() );	
-	    if (participant.IsSelf)		
-	    {
-	        Delete();
-	    }else if(LobbyObj.GetComponent<RectTransform>().localScale==new Vector3(0,0,0)){
-	    	List<string> players=new List<string>(PlayerPrefs.GetString("Players").Split(',').ToList());
-	    	Destroy(GameObject.Find(username));
-	    	players.Remove(username);
-	    	PlayerPrefs.SetString("Players",string.Join(",",players.ToArray()));
-	    }
+		var source = (VivoxUnity.IReadOnlyDictionary<string, IParticipant>)sender;		
+		var participant = source[keyEventArg.Key];
+		var username = participant.Account.Name;
+		var channel = participant.ParentChannelSession.Key;
+		var channelSession = participant.ParentChannelSession;
+		Text playersText=GameObject.Find("players").GetComponent<Text>();
+		List<string> playersTextList=playersText.text.Split(',').ToList();
+		playersTextList.Remove(username);
+		playersText.text=string.Join( ",", playersTextList.ToArray() );	
+		if (participant.IsSelf)		
+		{
+			Delete();
+		}else if(LobbyObj.GetComponent<RectTransform>().localScale==new Vector3(0,0,0)){
+			List<string> players=new List<string>(PlayerPrefs.GetString("Players").Split(',').ToList());
+			Destroy(GameObject.Find(username));
+			players.Remove(username);
+			PlayerPrefs.SetString("Players",string.Join(",",players.ToArray()));
+		}
 	}
 
 	private void OnParticipantValueUpdated(object sender, ValueEventArg<string, IParticipant> valueEventArg)
 	{
-	    ValidateArgs(new object[] { sender, valueEventArg }); //see code from earlier in post
+		ValidateArgs(new object[] { sender, valueEventArg }); //see code from earlier in post
 				
-	    var source = (VivoxUnity.IReadOnlyDictionary<string, IParticipant>)sender;			
-	    var participant = source[valueEventArg.Key];			
+		var source = (VivoxUnity.IReadOnlyDictionary<string, IParticipant>)sender;			
+		var participant = source[valueEventArg.Key];			
 				
-	    string username = valueEventArg.Value.Account.Name;
-	    ChannelId channel = valueEventArg.Value.ParentChannelSession.Key;
-	    string property = valueEventArg.PropertyName;
+		string username = valueEventArg.Value.Account.Name;
+		ChannelId channel = valueEventArg.Value.ParentChannelSession.Key;
+		string property = valueEventArg.PropertyName;
 		
-	    switch (property)
-	    {
-	        case "LocalMute":
-	        {
-	            if (username != GameObject.Find("UserNameText").GetComponent<Text>().text) //can't local mute yourself, so don't check for it
-	            {
-	                //update their muted image
-	            }else{
+		switch (property)
+		{
+			case "LocalMute":
+			{
+				if (username != GameObject.Find("UserNameText").GetComponent<Text>().text) //can't local mute yourself, so don't check for it
+				{
+					//update their muted image
+				}else{
 
-	            }
-	            break;
-	        }
-	        default:		
-	            break;
-	    }
+				}
+				break;
+			}
+			default:		
+				break;
+		}
 	}
 
 	void SendGroupMessage(string message)
-    {   
-        _channelSession.BeginSendText(message, ar => 
-        {
-            try
-            {
-                _channelSession.EndSendText(ar);
-            }
-            catch (Exception e)
-            {
-                // Handle error 
-                return;
-            }
-        });
-    }
+	{   
+		_channelSession.BeginSendText(message, ar => 
+		{
+			try
+			{
+				_channelSession.EndSendText(ar);
+			}
+			catch (Exception e)
+			{
+				// Handle error 
+				return;
+			}
+		});
+	}
 
-    void OnChannelMessageReceived(object sender, QueueItemAddedEventArgs<IChannelTextMessage> queueItemAddedEventArgs)
-    {
-        var channelName = queueItemAddedEventArgs.Value.ChannelSession.Channel.Name; 
-        var senderName = queueItemAddedEventArgs.Value.Sender.Name;
-        var message = queueItemAddedEventArgs.Value.Message;
+	void OnChannelMessageReceived(object sender, QueueItemAddedEventArgs<IChannelTextMessage> queueItemAddedEventArgs)
+	{
+		var channelName = queueItemAddedEventArgs.Value.ChannelSession.Channel.Name; 
+		var senderName = queueItemAddedEventArgs.Value.Sender.Name;
+		var message = queueItemAddedEventArgs.Value.Message;
 
-        PlayerPrefs.SetString("Recieved",message);
+		PlayerPrefs.SetString("Recieved",message);
 
-        Debug.Log(channelName + ": " + senderName + ": " + message);
-    }
+		Debug.Log(channelName + ": " + senderName + ": " + message);
+	}
 
 	private void BindChannelSessionHandlers(bool doBind)
 	{
-	    //Subscribing to the events
-	    if (doBind)
-	    {
-	        // Participants
-	        _channelSession.Participants.AfterKeyAdded += OnParticipantAdded;
-	        _channelSession.Participants.BeforeKeyRemoved += OnParticipantRemoved;
-	        _channelSession.Participants.AfterValueUpdated += OnParticipantValueUpdated;
+		//Subscribing to the events
+		if (doBind)
+		{
+			// Participants
+			_channelSession.Participants.AfterKeyAdded += OnParticipantAdded;
+			_channelSession.Participants.BeforeKeyRemoved += OnParticipantRemoved;
+			_channelSession.Participants.AfterValueUpdated += OnParticipantValueUpdated;
 			
-	        //Messaging
-	        _channelSession.MessageLog.AfterItemAdded += OnChannelMessageReceived;
-	    }
+			//Messaging
+			_channelSession.MessageLog.AfterItemAdded += OnChannelMessageReceived;
+		}
 		
-	    //Unsubscribing to the events
-	    else
-	    {
-	        // Participants
-	        _channelSession.Participants.AfterKeyAdded -= OnParticipantAdded;
-	        _channelSession.Participants.BeforeKeyRemoved -= OnParticipantRemoved;
-	        _channelSession.Participants.AfterValueUpdated -= OnParticipantValueUpdated;
+		//Unsubscribing to the events
+		else
+		{
+			// Participants
+			_channelSession.Participants.AfterKeyAdded -= OnParticipantAdded;
+			_channelSession.Participants.BeforeKeyRemoved -= OnParticipantRemoved;
+			_channelSession.Participants.AfterValueUpdated -= OnParticipantValueUpdated;
 		
-	        //Messaging
-	        _channelSession.MessageLog.AfterItemAdded -= OnChannelMessageReceived;
-	    }
+			//Messaging
+			_channelSession.MessageLog.AfterItemAdded -= OnChannelMessageReceived;
+		}
 	}
 
-    public void onStart(){
+	public void onStart(){
 		PlayerPrefs.SetString("User",GameObject.Find("UserNameText").GetComponent<Text>().text);
 		LobbyObj.GetComponent<RectTransform>().localScale=new Vector3(0,0,0);
-    	GameObj.GetComponent<RectTransform>().localScale=new Vector3(1,1,1);
+		GameObj.GetComponent<RectTransform>().localScale=new Vector3(1,1,1);
 		if(PlayerPrefs.GetString("Mode")=="Create"){
 			PlayerPrefs.SetString("Mode","Connect");
 			SendGroupMessage("ClearAll");
@@ -458,145 +458,145 @@ public class Room : MonoBehaviour
 			SendGroupMessage("Cards:"+PlayerPrefs.GetString("Cards"));
 			SendGroupMessage("Order:"+GameObject.Find("players").GetComponent<Text>().text);
 		}
-    }
+	}
 
-    void displayNames(){
-    	List<string> players=new List<string>(PlayerPrefs.GetString("Players").Split(',').ToList());
-    	int i=players.IndexOf(PlayerPrefs.GetString("User"));
-    	switch (players.Count)
-	    {
-	        case 2:
-	            for(int j=1;j<players.Count;j++){
-	            	GameObject player=new GameObject(players[(i+j)%players.Count]);
-	            	player.transform.SetParent(GameObj.transform,false);
-	            	TextMeshProUGUI playerText=player.AddComponent<TextMeshProUGUI>() as TextMeshProUGUI;
-		            playerText.fontSize=32;
-		            playerText.color=Color.black;
-		            switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
-		            	case 0:
-		            		playerText.text="<u color="+UserColor[0]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
-		            		break;
-		            	case 1:
-		            		playerText.text="<u color="+UserColor[1]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
-		            		break;
-		            	default:
-		            		break;
-		            }
-		            playerText.alignment = TextAlignmentOptions.Midline;
-		            playerText.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
-		            playerText.fontSharedMaterial = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - Drop Shadow");
-		            RectTransform rectTransform = playerText.GetComponent<RectTransform>();
-		        	rectTransform.localPosition = new Vector3(0, 620, 0);
-		        	rectTransform.sizeDelta = new Vector2(200, 75);
-		        	rectTransform.localEulerAngles = new Vector3(0, 0, 0);
-	            }
-	            break;
-	        case 3:
-	        	for(int j=1;j<players.Count;j++){
-	            	GameObject player=new GameObject(players[(i+j)%players.Count]);
-	            	player.transform.SetParent(GameObj.transform,false);
-	            	TextMeshProUGUI playerText=player.AddComponent<TextMeshProUGUI>() as TextMeshProUGUI;
-		            playerText.fontSize=32;
-		            playerText.color=Color.black;
-		            switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
-		            	case 0:
-		            		playerText.text="<u color="+UserColor[0]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
-		            		break;
-		            	case 1:
-		            		playerText.text="<u color="+UserColor[1]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
-		            		break;
-		            	case 2:
-		            		playerText.text="<u color="+UserColor[2]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
-		            		break;
-		            	default:
-		            		break;
-		            }
-		            playerText.alignment=TextAlignmentOptions.Midline;
-		            playerText.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
-		            playerText.fontSharedMaterial = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - Drop Shadow");
-		            RectTransform rectTransform = playerText.GetComponent<RectTransform>();
-		            switch(j){
-		            	case 1:
-		            		rectTransform.localPosition = new Vector3(-320, 580, 0);
-				        	rectTransform.sizeDelta = new Vector2(200, 75);
-				        	rectTransform.localEulerAngles = new Vector3(0, 0, 45);
-				        	break;
-				        case 2:
-				        	rectTransform.localPosition = new Vector3(320, 580, 0);
-				        	rectTransform.sizeDelta = new Vector2(200, 75);
-				        	rectTransform.localEulerAngles = new Vector3(0, 0, -45);
-				        	break;
-				        default:
-				        	break;
-		            }
-	            }
-	        	break;
-	        case 4:
-	            for(int j=1;j<players.Count;j++){
-	            	GameObject player=new GameObject(players[(i+j)%players.Count]);
-	            	player.transform.SetParent(GameObj.transform,false);
-	            	TextMeshProUGUI playerText=player.AddComponent<TextMeshProUGUI>() as TextMeshProUGUI;
-		            playerText.fontSize=32;
-		            playerText.color=Color.black;
-		            switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
-		            	case 0:
-		            		playerText.text="<u color="+UserColor[0]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
-		            		break;
-		            	case 1:
-		            		playerText.text="<u color="+UserColor[1]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
-		            		break;
-		            	case 2:
-		            		playerText.text="<u color="+UserColor[2]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
-		            		break;
-		            	case 3:
-		            		playerText.text="<u color="+UserColor[3]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
-		            		break;
-		            	default:
-		            		break;
-		            }
-		            playerText.alignment = TextAlignmentOptions.Midline;
-		            playerText.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
-		            playerText.fontSharedMaterial = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - Drop Shadow");
-		            RectTransform rectTransform = playerText.GetComponent<RectTransform>();
-		            switch(j){
-		            	case 1:
-		            		rectTransform.localPosition = new Vector3(-380, 237.5F, 0);
-				        	rectTransform.sizeDelta = new Vector2(200, 75);
-				        	rectTransform.localEulerAngles = new Vector3(0, 0, 90);
-				        	break;
-				        case 2:
-				        	rectTransform.localPosition = new Vector3(0, 620, 0);
-				        	rectTransform.sizeDelta = new Vector2(200, 75);
-				        	rectTransform.localEulerAngles = new Vector3(0, 0, 0);
-				        	break;
-				        case 3:
-				        	rectTransform.localPosition = new Vector3(380, 237.5F, 0);
-				        	rectTransform.sizeDelta = new Vector2(200, 75);
-				        	rectTransform.localEulerAngles = new Vector3(0, 0, -90);
-				        	break;
-				        default:
-				        	break;
-		            }
-	            }
-	            break;
-	        default:
-	            // Console.WriteLine("Default case");
-	            break;
-	      }
-    }
+	void displayNames(){
+		List<string> players=new List<string>(PlayerPrefs.GetString("Players").Split(',').ToList());
+		int i=players.IndexOf(PlayerPrefs.GetString("User"));
+		switch (players.Count)
+		{
+			case 2:
+				for(int j=1;j<players.Count;j++){
+					GameObject player=new GameObject(players[(i+j)%players.Count]);
+					player.transform.SetParent(GameObj.transform,false);
+					TextMeshProUGUI playerText=player.AddComponent<TextMeshProUGUI>() as TextMeshProUGUI;
+					playerText.fontSize=32;
+					playerText.color=Color.black;
+					switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
+						case 0:
+							playerText.text="<u color="+UserColor[0]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
+							break;
+						case 1:
+							playerText.text="<u color="+UserColor[1]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
+							break;
+						default:
+							break;
+					}
+					playerText.alignment = TextAlignmentOptions.Midline;
+					playerText.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+					playerText.fontSharedMaterial = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - Drop Shadow");
+					RectTransform rectTransform = playerText.GetComponent<RectTransform>();
+					rectTransform.localPosition = new Vector3(0, 620, 0);
+					rectTransform.sizeDelta = new Vector2(200, 75);
+					rectTransform.localEulerAngles = new Vector3(0, 0, 0);
+				}
+				break;
+			case 3:
+				for(int j=1;j<players.Count;j++){
+					GameObject player=new GameObject(players[(i+j)%players.Count]);
+					player.transform.SetParent(GameObj.transform,false);
+					TextMeshProUGUI playerText=player.AddComponent<TextMeshProUGUI>() as TextMeshProUGUI;
+					playerText.fontSize=32;
+					playerText.color=Color.black;
+					switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
+						case 0:
+							playerText.text="<u color="+UserColor[0]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
+							break;
+						case 1:
+							playerText.text="<u color="+UserColor[1]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
+							break;
+						case 2:
+							playerText.text="<u color="+UserColor[2]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
+							break;
+						default:
+							break;
+					}
+					playerText.alignment=TextAlignmentOptions.Midline;
+					playerText.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+					playerText.fontSharedMaterial = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - Drop Shadow");
+					RectTransform rectTransform = playerText.GetComponent<RectTransform>();
+					switch(j){
+						case 1:
+							rectTransform.localPosition = new Vector3(-320, 580, 0);
+							rectTransform.sizeDelta = new Vector2(200, 75);
+							rectTransform.localEulerAngles = new Vector3(0, 0, 45);
+							break;
+						case 2:
+							rectTransform.localPosition = new Vector3(320, 580, 0);
+							rectTransform.sizeDelta = new Vector2(200, 75);
+							rectTransform.localEulerAngles = new Vector3(0, 0, -45);
+							break;
+						default:
+							break;
+					}
+				}
+				break;
+			case 4:
+				for(int j=1;j<players.Count;j++){
+					GameObject player=new GameObject(players[(i+j)%players.Count]);
+					player.transform.SetParent(GameObj.transform,false);
+					TextMeshProUGUI playerText=player.AddComponent<TextMeshProUGUI>() as TextMeshProUGUI;
+					playerText.fontSize=32;
+					playerText.color=Color.black;
+					switch(PlayerPrefs.GetString("Players").Split(',').ToList().IndexOf(players[(i+j)%players.Count])){
+						case 0:
+							playerText.text="<u color="+UserColor[0]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
+							break;
+						case 1:
+							playerText.text="<u color="+UserColor[1]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
+							break;
+						case 2:
+							playerText.text="<u color="+UserColor[2]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
+							break;
+						case 3:
+							playerText.text="<u color="+UserColor[3]+"><b>"+players[(i+j)%players.Count]+"</b></u>";
+							break;
+						default:
+							break;
+					}
+					playerText.alignment = TextAlignmentOptions.Midline;
+					playerText.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+					playerText.fontSharedMaterial = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - Drop Shadow");
+					RectTransform rectTransform = playerText.GetComponent<RectTransform>();
+					switch(j){
+						case 1:
+							rectTransform.localPosition = new Vector3(-380, 237.5F, 0);
+							rectTransform.sizeDelta = new Vector2(200, 75);
+							rectTransform.localEulerAngles = new Vector3(0, 0, 90);
+							break;
+						case 2:
+							rectTransform.localPosition = new Vector3(0, 620, 0);
+							rectTransform.sizeDelta = new Vector2(200, 75);
+							rectTransform.localEulerAngles = new Vector3(0, 0, 0);
+							break;
+						case 3:
+							rectTransform.localPosition = new Vector3(380, 237.5F, 0);
+							rectTransform.sizeDelta = new Vector2(200, 75);
+							rectTransform.localEulerAngles = new Vector3(0, 0, -90);
+							break;
+						default:
+							break;
+					}
+				}
+				break;
+			default:
+				// Console.WriteLine("Default case");
+				break;
+		  }
+	}
 
-    void destroyNames(){
-    	List<string> players=new List<string>(PlayerPrefs.GetString("Players").Split(',').ToList());
-    	foreach(string name in players){
-    		if(name!=PlayerPrefs.GetString("User"))
-    			Destroy(GameObject.Find(name));
-    	}
-    }
+	void destroyNames(){
+		List<string> players=new List<string>(PlayerPrefs.GetString("Players").Split(',').ToList());
+		foreach(string name in players){
+			if(name!=PlayerPrefs.GetString("User"))
+				Destroy(GameObject.Find(name));
+		}
+	}
 
-    private IEnumerator PlayAudio (string name)
-    {
-        AudioSource audio = GameObject.Find(name).GetComponent<AudioSource>();
-        audio.Play();
-        yield return new WaitForSeconds(audio.clip.length);
-    }
+	private IEnumerator PlayAudio (string name)
+	{
+		AudioSource audio = GameObject.Find(name).GetComponent<AudioSource>();
+		audio.Play();
+		yield return new WaitForSeconds(audio.clip.length);
+	}
 }

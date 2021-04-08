@@ -7,64 +7,64 @@ using UnityEngine.EventSystems;
 
 public class Table : MonoBehaviour
 {
-    // Start is called before the first frame update
-    GameObject TableObject;
-    GameObject UserObject;
+	// Start is called before the first frame update
+	GameObject TableObject;
+	GameObject UserObject;
 
-    string[] UserColor=new string[]{"Red","Green","Blue","Yellow"};
+	string[] UserColor=new string[]{"Red","Green","Blue","Yellow"};
 
-    void Start()
-    {
-        TableObject=GameObject.Find("TableObject");
-        UserObject=GameObject.Find("UserObject");
-    }
+	void Start()
+	{
+		TableObject=GameObject.Find("TableObject");
+		UserObject=GameObject.Find("UserObject");
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-    	if(PlayerPrefs.GetString("Recieved")!=""){
-    		string message=PlayerPrefs.GetString("Recieved");
-    		if(message=="DisplayTable"){
-    			displayTable();
-    			PlayerPrefs.SetInt("Collected",0);
-    			Collect=false;
-    			PlayerPrefs.SetString("Recieved","");
-    		}else if(message.Split(':').ToList()[0]=="Table"){
-    			StartCoroutine(PlayAudio("PlayCard"));
-	        	Tabulation(message);
-	        	PlayerPrefs.SetString("LastMessage",message);
-	        	PlayerPrefs.SetString("Recieved","");
-	        }else if(message.Split(':').ToList()[0]=="Collect"){
-	        	StartCoroutine(PlayAudio("PlayCard"));
-	        	Collection(message);
-	        	PlayerPrefs.SetString("LastMessage",message);
-	        	PlayerPrefs.SetString("Recieved","");
-	        }else if(message=="Undo"){
-	        	StartCoroutine(PlayAudio("PlayCard"));
-	        	Undo();
-	        	PlayerPrefs.SetString("LastMessage","");
-	        	PlayerPrefs.SetString("Recieved","");
-	        }
-        }
+	// Update is called once per frame
+	void Update()
+	{
+		if(PlayerPrefs.GetString("Recieved")!=""){
+			string message=PlayerPrefs.GetString("Recieved");
+			if(message=="DisplayTable"){
+				displayTable();
+				PlayerPrefs.SetInt("Collected",0);
+				Collect=false;
+				PlayerPrefs.SetString("Recieved","");
+			}else if(message.Split(':').ToList()[0]=="Table"){
+				StartCoroutine(PlayAudio("PlayCard"));
+				Tabulation(message);
+				PlayerPrefs.SetString("LastMessage",message);
+				PlayerPrefs.SetString("Recieved","");
+			}else if(message.Split(':').ToList()[0]=="Collect"){
+				StartCoroutine(PlayAudio("PlayCard"));
+				Collection(message);
+				PlayerPrefs.SetString("LastMessage",message);
+				PlayerPrefs.SetString("Recieved","");
+			}else if(message=="Undo"){
+				StartCoroutine(PlayAudio("PlayCard"));
+				Undo();
+				PlayerPrefs.SetString("LastMessage","");
+				PlayerPrefs.SetString("Recieved","");
+			}
+		}
 
-        if(PlayerPrefs.GetString("LastActiveTableCard")!="" && PlayerPrefs.GetString("SelectedTableCard")!=PlayerPrefs.GetString("LastActiveTableCard")){
-        	Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+		if(PlayerPrefs.GetString("LastActiveTableCard")!="" && PlayerPrefs.GetString("SelectedTableCard")!=PlayerPrefs.GetString("LastActiveTableCard")){
+			Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
 			Texture2D SpriteTextureOld = Resources.Load<Texture2D>("Rectangle"+PlayerPrefs.GetString("LastActiveTableCardColor"));
 			Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 			BRCOld.sprite = SpriteOld;
 			Color color=BRCOld.color;
 			color.a=opaqueColor;
 			BRCOld.color=color;
-        }
+		}
 
-        if(PlayerPrefs.GetString("SelectedTableCard")=="" && PlayerPrefs.GetInt("Collected")!=-1){
+		if(PlayerPrefs.GetString("SelectedTableCard")=="" && PlayerPrefs.GetInt("Collected")!=-1){
 			GameObject CollectedObject=GameObject.Find("Collected");
-            CollectedObject.GetComponent<Text>().text="Collection : "+PlayerPrefs.GetInt("Collected");
-            CollectedObject.GetComponent<RectTransform>().sizeDelta=new Vector2(800, 75);
+			CollectedObject.GetComponent<Text>().text="Collection : "+PlayerPrefs.GetInt("Collected");
+			CollectedObject.GetComponent<RectTransform>().sizeDelta=new Vector2(800, 75);
 		}else{
 			GameObject CollectedObject=GameObject.Find("Collected");
-            CollectedObject.GetComponent<Text>().text="Collection : "+PlayerPrefs.GetInt("Collected");
-            CollectedObject.GetComponent<RectTransform>().sizeDelta=new Vector2(0, 0);
+			CollectedObject.GetComponent<Text>().text="Collection : "+PlayerPrefs.GetInt("Collected");
+			CollectedObject.GetComponent<RectTransform>().sizeDelta=new Vector2(0, 0);
 		}
 
 		if(PlayerPrefs.GetInt("Collected")!=-1)
@@ -74,7 +74,7 @@ public class Table : MonoBehaviour
 		
 		if (Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.currentSelectedGameObject){
 			if(PlayerPrefs.GetString("SelectedTableCard")!=""){
-		    	Image BRCOld=GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+				Image BRCOld=GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
 				Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
 				Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 				BRCOld.sprite = SpriteOld;
@@ -87,9 +87,9 @@ public class Table : MonoBehaviour
 				Destroy(GameObject.Find("Collect"));
 				Collect=false;
 				PlayerPrefs.SetString("SelectedTableCard","");
-		    }
+			}
 		}
-    }
+	}
 
 	int row=4;
 	int col=5;
@@ -110,8 +110,8 @@ public class Table : MonoBehaviour
 	float translucentColor2=0.5F;
 	float opaqueColor=1;
 
-    void displayTable(){
-    	for(int r=0;r<row;r++){
+	void displayTable(){
+		for(int r=0;r<row;r++){
 			for(int c=0;c<col;c++){
 				GameObject rc=new GameObject("RC"+r+""+c);
 				rc.transform.SetParent(TableObject.transform,false);
@@ -125,8 +125,8 @@ public class Table : MonoBehaviour
 				btn.image=img;
 				btn.onClick.AddListener(delegate { onTableCard(); });
 				RectTransform rectTransform = btn.GetComponent<RectTransform>();
-	        	rectTransform.localPosition = new Vector3(locX, locY, 0);
-	        	rectTransform.sizeDelta = new Vector2(TableCardWidth, TableCardHeight);
+				rectTransform.localPosition = new Vector3(locX, locY, 0);
+				rectTransform.sizeDelta = new Vector2(TableCardWidth, TableCardHeight);
 
 				GameObject B=new GameObject("B"+"RC"+r+""+c);
 				B.transform.SetParent(rc.transform,false);
@@ -134,17 +134,17 @@ public class Table : MonoBehaviour
 				Texture2D SpriteB = Resources.Load<Texture2D>("RectangleBlack");
 				Sprite BSprite = Sprite.Create(SpriteB, new Rect(0, 0, SpriteB.width, SpriteB.height),new Vector2(0,0),1);
 				RectTransform rectTransformB = BImage.GetComponent<RectTransform>();
-	        	rectTransformB.localEulerAngles = new Vector3(0, 0, RectRotation);
-	        	rectTransformB.sizeDelta = new Vector2(RectWidth, RectHeight);
+				rectTransformB.localEulerAngles = new Vector3(0, 0, RectRotation);
+				rectTransformB.sizeDelta = new Vector2(RectWidth, RectHeight);
 				BImage.sprite=BSprite;
 				Color color=BImage.color;
 				color.a=transparentColor;
 				BImage.color=color;
 			}
 		}
-    }
+	}
 
-    public void onTableCard(){
+	public void onTableCard(){
 		string BtnName="";
 		if(EventSystem.current.currentSelectedGameObject!=null){
 			BtnName=EventSystem.current.currentSelectedGameObject.name;
@@ -203,8 +203,8 @@ public class Table : MonoBehaviour
 					Image Vimg = v.AddComponent<Image>() as Image;
 					Vimg.sprite=img.sprite;
 					RectTransform rectTransform = Vimg.GetComponent<RectTransform>();
-		        	rectTransform.localPosition = new Vector3(loc, 0, 0);
-		        	rectTransform.sizeDelta=new Vector2(TableCardWidth,TableCardHeight);
+					rectTransform.localPosition = new Vector3(loc, 0, 0);
+					rectTransform.sizeDelta=new Vector2(TableCardWidth,TableCardHeight);
 				}
 				PlayerPrefs.SetString("SelectedTableCard",BtnName);
 			}
@@ -220,8 +220,8 @@ public class Table : MonoBehaviour
 				CollectBtn.image=CollectImg;
 				CollectBtn.onClick.AddListener(delegate { Collected(); });
 				RectTransform CollectrectTransform = CollectBtn.GetComponent<RectTransform>();
-	        	CollectrectTransform.localPosition = new Vector3(0, 137.5F, 0);
-	        	CollectrectTransform.sizeDelta = new Vector2(80, 80);
+				CollectrectTransform.localPosition = new Vector3(0, 137.5F, 0);
+				CollectrectTransform.sizeDelta = new Vector2(80, 80);
 			}else if(Collect && (PlayerPrefs.GetString("SelectedTableCard")=="" || GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.childCount<=1)){
 				Destroy(GameObject.Find("Collect"));
 				Collect=false;
@@ -236,15 +236,15 @@ public class Table : MonoBehaviour
 			message=message+child.name.Split(':').ToList()[1];
 			if(i!=GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.childCount-1)
 				message=message+",";
-    	}
+		}
 		PlayerPrefs.SetString("Send",message);
 	}
 
 	void Tabulation(string message){
 		GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
-    	string senderName=message.Split(':').ToList()[1];
+		string senderName=message.Split(':').ToList()[1];
 		if(PlayerPrefs.GetString("LastActiveTableCard")!=""){
-    		Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+			Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
 			Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
 			Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 			BRCOld.sprite = SpriteOld;
@@ -257,25 +257,25 @@ public class Table : MonoBehaviour
 		GameObject child=new GameObject(rc.name+rc.transform.childCount+":"+message.Split(':').ToList()[3]);
 		child.transform.SetParent(rc.transform,false);
 		if(senderName!=PlayerPrefs.GetString("User"))
-    		child.transform.position=GameObject.Find(senderName).transform.position;
-    	else
-    		child.transform.position=UserObject.transform.position;
+			child.transform.position=GameObject.Find(senderName).transform.position;
+		else
+			child.transform.position=UserObject.transform.position;
 		Image img = child.AddComponent<Image>() as Image;
 		Texture2D SpriteTexture = Resources.Load<Texture2D>(message.Split(':').ToList()[3]);
 		Sprite NewSprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height),new Vector2(0,0),1);
 		img.sprite = NewSprite;
 		RectTransform rectTransform = img.GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(TableCardWidth, TableCardHeight);	
-        StartCoroutine (SmoothLerpCreate (0.2f,child));
-    	if(message.Split(':').ToList()[0]=="Table")
-    		onTableCard();
-    }
+		rectTransform.sizeDelta = new Vector2(TableCardWidth, TableCardHeight);	
+		StartCoroutine (SmoothLerpCreate (0.2f,child));
+		if(message.Split(':').ToList()[0]=="Table")
+			onTableCard();
+	}
 
-    void Collection(string message){
-    	GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
-    	string senderName=message.Split(':').ToList()[1];
-    	if(PlayerPrefs.GetString("LastActiveTableCard")!="" && PlayerPrefs.GetString("LastActiveTableCard")==rc.name){
-    		Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+	void Collection(string message){
+		GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
+		string senderName=message.Split(':').ToList()[1];
+		if(PlayerPrefs.GetString("LastActiveTableCard")!="" && PlayerPrefs.GetString("LastActiveTableCard")==rc.name){
+			Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
 			Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
 			Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 			BRCOld.sprite = SpriteOld;
@@ -285,7 +285,7 @@ public class Table : MonoBehaviour
 			PlayerPrefs.SetString("LastActiveTableCard","");
 			PlayerPrefs.SetString("LastActiveTableCardColor","");
 		}
-    	if(PlayerPrefs.GetString("SelectedTableCard")==rc.name){
+		if(PlayerPrefs.GetString("SelectedTableCard")==rc.name){
 			Image BRCOld=GameObject.Find(PlayerPrefs.GetString("SelectedTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
 			Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
 			Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
@@ -301,90 +301,90 @@ public class Table : MonoBehaviour
 		while(rc.transform.childCount!=1){
 			GameObject child=rc.transform.GetChild(1).gameObject;
 			if(senderName!=PlayerPrefs.GetString("User")){
-        		child.transform.SetParent(GameObject.Find(senderName).transform,false);
-        		child.transform.position=rc.transform.position;
-        	}else{
-        		child.transform.SetParent(UserObject.transform,false);
-        		child.transform.position=rc.transform.position;
-        	}
-    		StartCoroutine (SmoothLerpDestroy (0.2f,child));
-    	}
-    	if(PlayerPrefs.GetString("User")==senderName)
-    		PlayerPrefs.SetInt("Collected",PlayerPrefs.GetInt("Collected")+1);
-    }
+				child.transform.SetParent(GameObject.Find(senderName).transform,false);
+				child.transform.position=rc.transform.position;
+			}else{
+				child.transform.SetParent(UserObject.transform,false);
+				child.transform.position=rc.transform.position;
+			}
+			StartCoroutine (SmoothLerpDestroy (0.2f,child));
+		}
+		if(PlayerPrefs.GetString("User")==senderName)
+			PlayerPrefs.SetInt("Collected",PlayerPrefs.GetInt("Collected")+1);
+	}
 
-    private IEnumerator SmoothLerpCreate (float time, GameObject child)
-    {
-	    Vector3 startingPos  = child.transform.localPosition;
-	    Vector3 finalPos = new Vector3(0,0,0);
-	    float elapsedTime = 0;
-	    
-	    while (elapsedTime <= time)
-	    {
-	        child.transform.localPosition = Vector3.Lerp(startingPos, finalPos, (elapsedTime / time));
-	        if(time==elapsedTime)
-	        	yield break;
-	        elapsedTime += Time.deltaTime;
-	        if(time-elapsedTime<0.01)
-	        	elapsedTime=time;
-	        yield return null;
-	    }
-    }
+	private IEnumerator SmoothLerpCreate (float time, GameObject child)
+	{
+		Vector3 startingPos  = child.transform.localPosition;
+		Vector3 finalPos = new Vector3(0,0,0);
+		float elapsedTime = 0;
+		
+		while (elapsedTime <= time)
+		{
+			child.transform.localPosition = Vector3.Lerp(startingPos, finalPos, (elapsedTime / time));
+			if(time==elapsedTime)
+				yield break;
+			elapsedTime += Time.deltaTime;
+			if(time-elapsedTime<0.01)
+				elapsedTime=time;
+			yield return null;
+		}
+	}
 
-    private IEnumerator SmoothLerpDestroy (float time, GameObject child)
-    {
-	    Vector3 startingPos  = child.transform.localPosition;
-	    Vector3 finalPos = new Vector3(0,0,0);
-	    float elapsedTime = 0;
-	    
-	    while (elapsedTime <= time)
-	    {
-	        child.transform.localPosition = Vector3.Lerp(startingPos, finalPos, (elapsedTime / time));
-	        if(time==elapsedTime){
-	        	Destroy(child);
-	        	yield break;
-	        }
-	        elapsedTime += Time.deltaTime;
-	        if(time-elapsedTime<0.01)
-	        	elapsedTime=time;
-	        yield return null;
-	    }
-    }
+	private IEnumerator SmoothLerpDestroy (float time, GameObject child)
+	{
+		Vector3 startingPos  = child.transform.localPosition;
+		Vector3 finalPos = new Vector3(0,0,0);
+		float elapsedTime = 0;
+		
+		while (elapsedTime <= time)
+		{
+			child.transform.localPosition = Vector3.Lerp(startingPos, finalPos, (elapsedTime / time));
+			if(time==elapsedTime){
+				Destroy(child);
+				yield break;
+			}
+			elapsedTime += Time.deltaTime;
+			if(time-elapsedTime<0.01)
+				elapsedTime=time;
+			yield return null;
+		}
+	}
 
-    private IEnumerator SmoothLerpCreateUndoTable (float time, GameObject child,string name)
-    {
-	    Vector3 startingPos  = child.transform.localPosition;
-	    Vector3 finalPos = new Vector3(0,0,0);
-	    float elapsedTime = 0;
-	    
-	    while (elapsedTime <= time)
-	    {
-	        child.transform.localPosition = Vector3.Lerp(startingPos, finalPos, (elapsedTime / time));
-	        if(time==elapsedTime){
-	        	Destroy(child);
-	        	if(PlayerPrefs.GetString("UserCards")=="")
-	        		PlayerPrefs.SetString("UserCards",name);
-	        	else
-	        		PlayerPrefs.SetString("UserCards",PlayerPrefs.GetString("UserCards")+","+name);
-	        	yield break;
-	        }
-	        elapsedTime += Time.deltaTime;
-	        if(time-elapsedTime<0.01)
-	        	elapsedTime=time;
-	        yield return null;
-	    }
-    }
+	private IEnumerator SmoothLerpCreateUndoTable (float time, GameObject child,string name)
+	{
+		Vector3 startingPos  = child.transform.localPosition;
+		Vector3 finalPos = new Vector3(0,0,0);
+		float elapsedTime = 0;
+		
+		while (elapsedTime <= time)
+		{
+			child.transform.localPosition = Vector3.Lerp(startingPos, finalPos, (elapsedTime / time));
+			if(time==elapsedTime){
+				Destroy(child);
+				if(PlayerPrefs.GetString("UserCards")=="")
+					PlayerPrefs.SetString("UserCards",name);
+				else
+					PlayerPrefs.SetString("UserCards",PlayerPrefs.GetString("UserCards")+","+name);
+				yield break;
+			}
+			elapsedTime += Time.deltaTime;
+			if(time-elapsedTime<0.01)
+				elapsedTime=time;
+			yield return null;
+		}
+	}
 
-    public void onUndo(){
-    	if(PlayerPrefs.GetString("LastMessage")!="")
-    		PlayerPrefs.SetString("Send","Undo");
-    }
+	public void onUndo(){
+		if(PlayerPrefs.GetString("LastMessage")!="")
+			PlayerPrefs.SetString("Send","Undo");
+	}
 
-    public void Undo(){
-    	string message=PlayerPrefs.GetString("LastMessage");
-    	if(message.Split(':').ToList()[0]=="Table"){
-    		if(PlayerPrefs.GetString("LastActiveTableCard")!=""){
-	    		Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
+	public void Undo(){
+		string message=PlayerPrefs.GetString("LastMessage");
+		if(message.Split(':').ToList()[0]=="Table"){
+			if(PlayerPrefs.GetString("LastActiveTableCard")!=""){
+				Image BRCOld=GameObject.Find(PlayerPrefs.GetString("LastActiveTableCard")).transform.GetChild(0).gameObject.GetComponent<Image>();
 				Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
 				Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 				BRCOld.sprite = SpriteOld;
@@ -394,40 +394,40 @@ public class Table : MonoBehaviour
 				PlayerPrefs.SetString("LastActiveTableCard","");
 				PlayerPrefs.SetString("LastActiveTableCardColor","");
 			}
-    		string senderName=message.Split(':').ToList()[1];
-    		GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
-    		string name="";
+			string senderName=message.Split(':').ToList()[1];
+			GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
+			string name="";
 			if(message.Split(':').ToList()[3].Length==2)
 				name=name+message.Split(':').ToList()[3][1]+message.Split(':').ToList()[3][0];
 			else if(message.Split(':').ToList()[3].Length==3)
 				name=name+message.Split(':').ToList()[3][2]+message.Split(':').ToList()[3][0]+message.Split(':').ToList()[3][1];
-    		GameObject child=rc.transform.GetChild(rc.transform.childCount-1).gameObject;
+			GameObject child=rc.transform.GetChild(rc.transform.childCount-1).gameObject;
 			if(senderName!=PlayerPrefs.GetString("User")){
-        		child.transform.SetParent(GameObject.Find(senderName).transform,false);
-        		child.transform.position=rc.transform.position;
-        		StartCoroutine(SmoothLerpDestroy(0.2f,child));
-        	}else{
-        		child.transform.SetParent(UserObject.transform,false);
-        		child.transform.position=rc.transform.position;
-        		StartCoroutine (SmoothLerpCreateUndoTable (0.2f,child,name));
-        	}
-    	}else if(message.Split(':').ToList()[0]=="Collect"){
-    		string senderName=message.Split(':').ToList()[1];
-    		GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
-    		List<string> names=message.Split(':').ToList()[3].Split(',').ToList();
-    		string newMessage="Collect:"+senderName+":"+rc.name+":";
-    		foreach(string name in names)
-    			Tabulation(newMessage+name);
-    		if(PlayerPrefs.GetString("User")==senderName)
-    			PlayerPrefs.SetInt("Collected",PlayerPrefs.GetInt("Collected")-1);
-    	}
-    	onTableCard();
-    }
+				child.transform.SetParent(GameObject.Find(senderName).transform,false);
+				child.transform.position=rc.transform.position;
+				StartCoroutine(SmoothLerpDestroy(0.2f,child));
+			}else{
+				child.transform.SetParent(UserObject.transform,false);
+				child.transform.position=rc.transform.position;
+				StartCoroutine (SmoothLerpCreateUndoTable (0.2f,child,name));
+			}
+		}else if(message.Split(':').ToList()[0]=="Collect"){
+			string senderName=message.Split(':').ToList()[1];
+			GameObject rc=GameObject.Find(message.Split(':').ToList()[2]);
+			List<string> names=message.Split(':').ToList()[3].Split(',').ToList();
+			string newMessage="Collect:"+senderName+":"+rc.name+":";
+			foreach(string name in names)
+				Tabulation(newMessage+name);
+			if(PlayerPrefs.GetString("User")==senderName)
+				PlayerPrefs.SetInt("Collected",PlayerPrefs.GetInt("Collected")-1);
+		}
+		onTableCard();
+	}
 
-    private IEnumerator PlayAudio (string name)
-    {
-        AudioSource audio = GameObject.Find(name).GetComponent<AudioSource>();
-        audio.Play();
-        yield return new WaitForSeconds(audio.clip.length);
-    }
+	private IEnumerator PlayAudio (string name)
+	{
+		AudioSource audio = GameObject.Find(name).GetComponent<AudioSource>();
+		audio.Play();
+		yield return new WaitForSeconds(audio.clip.length);
+	}
 }
