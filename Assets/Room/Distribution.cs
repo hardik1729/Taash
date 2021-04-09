@@ -102,6 +102,7 @@ public class Distribution : MonoBehaviour
 		PlayerPrefs.SetString("SelectedTableCard","");
 		PlayerPrefs.SetString("LastMessage","");
 		PlayerPrefs.SetString("LastActiveTableCard","");
+		PlayerPrefs.SetString("LastActiveTableCardColor","");
 	}
 
 	private IEnumerator SmoothLerpCreate (float time, GameObject child)
