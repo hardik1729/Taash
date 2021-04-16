@@ -12,13 +12,7 @@ public class Play : MonoBehaviour
 
 	void Start()
 	{
-		PlayerPrefs.SetString("UserCards","Start");
-		PlayerPrefs.SetInt("Collected",-1);
-		PlayerPrefs.SetInt("CardNumSwap",-1);
-		PlayerPrefs.SetString("SelectedTableCard","");
-		PlayerPrefs.SetString("LastActiveTableCard","");
-		PlayerPrefs.SetString("LastActiveTableCardColor","");
-		PlayerPrefs.SetString("LastMessage","");
+		
 	}
 
 	public void onRestart(){

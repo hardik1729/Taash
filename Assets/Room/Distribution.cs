@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Advertisements;
 
 public class Distribution : MonoBehaviour
 {
@@ -27,6 +28,35 @@ public class Distribution : MonoBehaviour
 	{
 		TableObject=GameObject.Find("TableObject");
 		UserObject=GameObject.Find("UserObject");
+
+		Scrollbar s=GameObject.Find("Scrollbar").GetComponent<Scrollbar>();
+		Button Next=GameObject.Find("Next").GetComponent<Button>();
+		Button Prev=GameObject.Find("Previous").GetComponent<Button>();
+
+		float transparentColor=0;
+		float translucentColor1=0.25F;
+		float translucentColor2=0.5F;
+		float opaqueColor=1;
+
+		Next.enabled=false;
+		Image imgN=Next.image;
+		Color colorN=imgN.color;
+		colorN.a=transparentColor;
+		imgN.color=colorN;
+		Prev.enabled=false;
+		Image imgP=Prev.image;
+		Color colorP=imgP.color;
+		colorP.a=transparentColor;
+		imgP.color=colorP;
+		s.enabled=false;
+		Image imgH=GameObject.Find("Handle").GetComponent<Image>();
+		Color colorH=imgH.color;
+		colorH.a=transparentColor;
+		imgH.color=colorH;
+		Image imgS=GameObject.Find("Scrollbar").GetComponent<Image>();
+		Color colorS=imgS.color;
+		colorS.a=transparentColor;
+		imgS.color=colorS;
 	}
 
 	// Update is called once per frame
@@ -46,10 +76,12 @@ public class Distribution : MonoBehaviour
 				activeDistribute=!activeDistribute;
 				PlayCards.Clear();
 				if(activeDistribute){
+					GameObject.Find("Script").AddComponent<Table>();
 					Count=PlayCards.Count;
 					foreach (Transform child in TableObject.transform)
 						Destroy(child.gameObject);
-				}
+				}else
+					GameObject.Find("Script").AddComponent<Cards>();
 				PlayerPrefs.SetString("Recieved","");
 			}else if(message.Split(':').ToList()[0]=="Distribute"){
 				StartCoroutine(PlayAudio("PlayCard"));
@@ -83,6 +115,13 @@ public class Distribution : MonoBehaviour
 			GameObject.Find("ShareAll").GetComponent<Button>().enabled=true;
 			GameObject.Find("ShareAll").GetComponent<Button>().interactable=true;
 		}
+
+		if(GameObject.Find("Scrollbar").GetComponent<Scrollbar>().enabled)
+			Advertisement.Banner.Hide();
+		else if(Advertisement.IsReady("banner")){
+			Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
+			Advertisement.Banner.Show("banner");  
+		}
 	}
 
 	public void ClearAll(){
@@ -92,17 +131,43 @@ public class Distribution : MonoBehaviour
 			Destroy(child.gameObject);
 		foreach (Transform child in GameObject.Find("VirtualUserObject").transform)
 			Destroy(child.gameObject);
+		foreach (Transform child in GameObject.Find("Temp").transform)
+			Destroy(child.gameObject);
 		activeDistribute=true;
 		distribution=false;
 		PlayCards.Clear();
 		Count=PlayCards.Count;
-		PlayerPrefs.SetString("UserCards","Start");
-		PlayerPrefs.SetInt("Collected",-1);
-		PlayerPrefs.SetInt("CardNumSwap",-1);
-		PlayerPrefs.SetString("SelectedTableCard","");
-		PlayerPrefs.SetString("LastMessage","");
-		PlayerPrefs.SetString("LastActiveTableCard","");
-		PlayerPrefs.SetString("LastActiveTableCardColor","");
+		GameObject GO=new GameObject("Script");
+		GO.transform.SetParent(GameObject.Find("Temp").transform,false);
+
+		Scrollbar s=GameObject.Find("Scrollbar").GetComponent<Scrollbar>();
+		Button Next=GameObject.Find("Next").GetComponent<Button>();
+		Button Prev=GameObject.Find("Previous").GetComponent<Button>();
+
+		float transparentColor=0;
+		float translucentColor1=0.25F;
+		float translucentColor2=0.5F;
+		float opaqueColor=1;
+
+		Next.enabled=false;
+		Image imgN=Next.image;
+		Color colorN=imgN.color;
+		colorN.a=transparentColor;
+		imgN.color=colorN;
+		Prev.enabled=false;
+		Image imgP=Prev.image;
+		Color colorP=imgP.color;
+		colorP.a=transparentColor;
+		imgP.color=colorP;
+		s.enabled=false;
+		Image imgH=GameObject.Find("Handle").GetComponent<Image>();
+		Color colorH=imgH.color;
+		colorH.a=transparentColor;
+		imgH.color=colorH;
+		Image imgS=GameObject.Find("Scrollbar").GetComponent<Image>();
+		Color colorS=imgS.color;
+		colorS.a=transparentColor;
+		imgS.color=colorS;
 	}
 
 	private IEnumerator SmoothLerpCreate (float time, GameObject child)

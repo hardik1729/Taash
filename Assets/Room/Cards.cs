@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.Advertisements;
 
 public class Cards : MonoBehaviour
 {
@@ -29,6 +28,13 @@ public class Cards : MonoBehaviour
 		s=GameObject.Find("Scrollbar").GetComponent<Scrollbar>();
 		Next=GameObject.Find("Next").GetComponent<Button>();
 		Prev=GameObject.Find("Previous").GetComponent<Button>();
+
+		Next.onClick.AddListener(delegate { onNext(); });
+		Prev.onClick.AddListener(delegate { onPrev(); });
+		s.onValueChanged.AddListener(delegate { Drag(); });
+
+		PlayerPrefs.SetString("UserCards","Start");
+		PlayerPrefs.SetInt("CardNumSwap",-1);
 	}
 
 	float transparentColor=0;
@@ -75,12 +81,6 @@ public class Cards : MonoBehaviour
 				LongPressCard=false;
 			}
 			Decision=false;
-		}
-		if(s.enabled)
-			Advertisement.Banner.Hide();
-		else if(Advertisement.IsReady("banner")){
-			Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
-			Advertisement.Banner.Show("banner");  
 		}
 
 		if(updateNav){

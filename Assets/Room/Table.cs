@@ -17,6 +17,37 @@ public class Table : MonoBehaviour
 	{
 		TableObject=GameObject.Find("TableObject");
 		UserObject=GameObject.Find("UserObject");
+
+		GameObject collect=new GameObject("Collected");
+    	collect.transform.SetParent(GameObject.Find("Temp").transform,false);
+    	Text collectText=collect.AddComponent<Text>() as Text;
+        collectText.fontSize=40;
+        collectText.color=Color.black;
+        collectText.alignment = TextAnchor.MiddleCenter;
+        collectText.font=Resources.GetBuiltinResource<Font>("Arial.ttf");
+        collectText.text="Collection";
+        RectTransform rectTransform = collectText.GetComponent<RectTransform>();
+    	rectTransform.localPosition = new Vector3(0, -275, 0);
+    	rectTransform.sizeDelta = new Vector2(800, 75);
+
+    	GameObject Undo=new GameObject("Undo");
+		Undo.transform.SetParent(GameObject.Find("Temp").transform,false);
+		Button UndoBtn = Undo.AddComponent<Button>() as Button;
+		Image UndoImg = Undo.AddComponent<Image>() as Image;
+		Texture2D SpriteUndo = Resources.Load<Texture2D>("Undo");				
+		Sprite UndoSprite = Sprite.Create(SpriteUndo, new Rect(0, 0, SpriteUndo.width, SpriteUndo.height),new Vector2(0,0),1);
+		UndoImg.sprite=UndoSprite;
+		UndoBtn.image=UndoImg;
+		UndoBtn.onClick.AddListener(delegate { onUndo(); });
+		RectTransform UndorectTransform = UndoBtn.GetComponent<RectTransform>();
+		UndorectTransform.localPosition = new Vector3(-340, -340, 0);
+		UndorectTransform.sizeDelta = new Vector2(90, 90);
+
+		PlayerPrefs.SetInt("Collected",-1);
+		PlayerPrefs.SetString("SelectedTableCard","");
+		PlayerPrefs.SetString("LastMessage","");
+		PlayerPrefs.SetString("LastActiveTableCard","");
+		PlayerPrefs.SetString("LastActiveTableCardColor","");
 	}
 
 	// Update is called once per frame
