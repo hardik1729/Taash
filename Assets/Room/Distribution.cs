@@ -72,16 +72,20 @@ public class Distribution : MonoBehaviour
 			}else if(message.Split(':').ToList()[0]=="PlayCards"){
 				PlayCards.AddRange(message.Split(':').ToList()[1].Split(',').ToList());
 				PlayerPrefs.SetString("Recieved","");
-			}else if(message=="activeDistribute"){
+			}else if(message.Split(':').ToList()[0]=="activeDistribute"){
 				activeDistribute=!activeDistribute;
-				PlayCards.Clear();
 				if(activeDistribute){
-					GameObject.Find("Script").AddComponent<Table>();
-					Count=PlayCards.Count;
+					if(message.Split(':').ToList()[1]=="Discard")
+						GameObject.Find("Script").AddComponent<Table>();
+					else if(message.Split(':').ToList()[1]=="Keep"){
+						PlayerPrefs.SetString("PlayCards",string.Join(",",PlayCards.ToArray()));
+						GameObject.Find("Script").AddComponent<Rummy>();
+					}
 					foreach (Transform child in TableObject.transform)
 						Destroy(child.gameObject);
 				}else
 					GameObject.Find("Script").AddComponent<Cards>();
+				PlayCards.Clear();
 				PlayerPrefs.SetString("Recieved","");
 			}else if(message.Split(':').ToList()[0]=="Distribute"){
 				StartCoroutine(PlayAudio("PlayCard"));
@@ -102,16 +106,20 @@ public class Distribution : MonoBehaviour
 		if(distribution && Count!=PlayCards.Count && TableObject.transform.childCount!=0){
 			GameObject.Find("T"+(TableObject.transform.childCount-1)).GetComponent<Button>().enabled=false;
 			GameObject.Find("T"+(TableObject.transform.childCount-1)).GetComponent<Button>().interactable=false;
-			GameObject.Find("Tick").GetComponent<Button>().enabled=false;
-			GameObject.Find("Tick").GetComponent<Button>().interactable=false;
+			GameObject.Find("Keep").GetComponent<Button>().enabled=false;
+			GameObject.Find("Keep").GetComponent<Button>().interactable=false;
+			GameObject.Find("Discard").GetComponent<Button>().enabled=false;
+			GameObject.Find("Discard").GetComponent<Button>().interactable=false;
 			GameObject.Find("ShareAll").GetComponent<Button>().enabled=false;
 			GameObject.Find("ShareAll").GetComponent<Button>().interactable=false;
 		}
 		else if(distribution && TableObject.transform.childCount!=0){
 			GameObject.Find("T"+(TableObject.transform.childCount-1)).GetComponent<Button>().enabled=true;
 			GameObject.Find("T"+(TableObject.transform.childCount-1)).GetComponent<Button>().interactable=true;
-			GameObject.Find("Tick").GetComponent<Button>().enabled=true;
-			GameObject.Find("Tick").GetComponent<Button>().interactable=true;
+			GameObject.Find("Keep").GetComponent<Button>().enabled=true;
+			GameObject.Find("Keep").GetComponent<Button>().interactable=true;
+			GameObject.Find("Discard").GetComponent<Button>().enabled=true;
+			GameObject.Find("Discard").GetComponent<Button>().interactable=true;
 			GameObject.Find("ShareAll").GetComponent<Button>().enabled=true;
 			GameObject.Find("ShareAll").GetComponent<Button>().interactable=true;
 		}
@@ -228,29 +236,52 @@ public class Distribution : MonoBehaviour
 		PlayerPrefs.SetString("Send",message+a);
 	}
 
-	public void tickDistribute(){
+	public void KeepDistribute(){
 		StartCoroutine(PlayAudio("Click"));
 		distribution=false;
-		PlayerPrefs.SetString("Send","activeDistribute"+";DisplayTable");
+		PlayerPrefs.SetString("Send","activeDistribute:Keep"+";DisplayTable");
 		Destroy(GameObject.Find("ShareAll"));
-		Destroy(GameObject.Find("Tick"));
+		Destroy(GameObject.Find("Keep"));
+		Destroy(GameObject.Find("Discard"));
+	}
+
+	public void DiscardDistribute(){
+		StartCoroutine(PlayAudio("Click"));
+		distribution=false;
+		PlayerPrefs.SetString("Send","activeDistribute:Discard"+";DisplayTable");
+		Destroy(GameObject.Find("ShareAll"));
+		Destroy(GameObject.Find("Keep"));
+		Destroy(GameObject.Find("Discard"));
 	}
 
 	public void clickDistribute(){
 		if(activeDistribute){
 			StartCoroutine(PlayAudio("Click"));
-			GameObject Tick=new GameObject("Tick");
-			Tick.transform.SetParent(UserObject.transform,false);
-			Button TickBtn = Tick.AddComponent<Button>() as Button;
-			Image TickImage=Tick.AddComponent<Image>() as Image;
-			Texture2D SpriteTick = Resources.Load<Texture2D>("Done");				
-			Sprite TickSprite = Sprite.Create(SpriteTick, new Rect(0, 0, SpriteTick.width, SpriteTick.height),new Vector2(0,0),1);
-			TickImage.sprite=TickSprite;
-			TickBtn.image=TickImage;
-			TickBtn.onClick.AddListener(delegate { tickDistribute(); });
-			RectTransform rectTransform = TickBtn.GetComponent<RectTransform>();
-			rectTransform.localPosition = new Vector3(0, 160, 0);
-			rectTransform.sizeDelta = new Vector2(100, 70);
+			GameObject Keep=new GameObject("Keep");
+			Keep.transform.SetParent(UserObject.transform,false);
+			Button KeepBtn = Keep.AddComponent<Button>() as Button;
+			Image KeepImage=Keep.AddComponent<Image>() as Image;
+			Texture2D SpriteKeep = Resources.Load<Texture2D>("Done");				
+			Sprite KeepSprite = Sprite.Create(SpriteKeep, new Rect(0, 0, SpriteKeep.width, SpriteKeep.height),new Vector2(0,0),1);
+			KeepImage.sprite=KeepSprite;
+			KeepBtn.image=KeepImage;
+			KeepBtn.onClick.AddListener(delegate { KeepDistribute(); });
+			RectTransform KeeprectTransform = KeepBtn.GetComponent<RectTransform>();
+			KeeprectTransform.localPosition = new Vector3(-100, 160, 0);
+			KeeprectTransform.sizeDelta = new Vector2(100, 70);
+
+			GameObject Discard=new GameObject("Discard");
+			Discard.transform.SetParent(UserObject.transform,false);
+			Button DiscardBtn = Discard.AddComponent<Button>() as Button;
+			Image DiscardImage=Discard.AddComponent<Image>() as Image;
+			Texture2D SpriteDiscard = Resources.Load<Texture2D>("Cross");				
+			Sprite DiscardSprite = Sprite.Create(SpriteDiscard, new Rect(0, 0, SpriteDiscard.width, SpriteDiscard.height),new Vector2(0,0),1);
+			DiscardImage.sprite=DiscardSprite;
+			DiscardBtn.image=DiscardImage;
+			DiscardBtn.onClick.AddListener(delegate { DiscardDistribute(); });
+			RectTransform DiscardrectTransform = DiscardBtn.GetComponent<RectTransform>();
+			DiscardrectTransform.localPosition = new Vector3(100, 160, 0);
+			DiscardrectTransform.sizeDelta = new Vector2(100, 100);
 			
 			GameObject ShareAll=new GameObject("ShareAll");
 			ShareAll.transform.SetParent(UserObject.transform,false);
@@ -277,7 +308,7 @@ public class Distribution : MonoBehaviour
 				i=i+1;
 				n=n-52;
 			}
-			PlayerPrefs.SetString("Send","activeDistribute;"+string.Join(";",messages.ToArray()));
+			PlayerPrefs.SetString("Send","activeDistribute:None;"+string.Join(";",messages.ToArray()));
 			distribution=true;
 		}else if(distribution)
 			PlayerPrefs.SetString("Send","Distribute:"+PlayerPrefs.GetString("User")+":1");

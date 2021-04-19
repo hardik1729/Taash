@@ -55,6 +55,7 @@ public class Cards : MonoBehaviour
 				displayCards();
 			}else{
 				destroyCards();
+				PlayerPrefs.SetInt("CardNumSwap",-1);
 				Count=0;
 				count=0;
 				s.value=0;
