@@ -50,7 +50,7 @@ public class Rummy : MonoBehaviour
 		CollectrectTransform.sizeDelta = new Vector2(0, 0);
 
 		GameObject upload=new GameObject("Upload");
-		upload.transform.SetParent(UserObject.transform,false);
+		upload.transform.SetParent(GameObject.Find("Temp").transform,false);
 		Button UploadBtn = upload.AddComponent<Button>() as Button;
 		Image UploadImg = upload.AddComponent<Image>() as Image;
 		Texture2D SpriteUpload = Resources.Load<Texture2D>("Upload");				
@@ -59,7 +59,7 @@ public class Rummy : MonoBehaviour
 		UploadBtn.image=UploadImg;
 		UploadBtn.onClick.AddListener(delegate { Uploaded(); });
 		RectTransform UploadrectTransform = UploadBtn.GetComponent<RectTransform>();
-		UploadrectTransform.localPosition = new Vector3(0, 137.5F, 0);
+		UploadrectTransform.localPosition = new Vector3(-340, -340, 0);
 		UploadrectTransform.sizeDelta = new Vector2(80, 80);
     }
 
@@ -118,13 +118,11 @@ public class Rummy : MonoBehaviour
 			Sprite NewSprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height),new Vector2(0,0),1);
 			GameObject.Find("V").GetComponent<Image>().sprite = NewSprite;
 			GameObject.Find("Collect").GetComponent<RectTransform>().sizeDelta=new Vector2(80,80);
-			GameObject.Find("Upload").GetComponent<RectTransform>().sizeDelta=new Vector2(0,0);
 		}else{
 			Texture2D SpriteTexture = Resources.Load<Texture2D>("Transparent");
 			Sprite NewSprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height),new Vector2(0,0),1);
 			GameObject.Find("V").GetComponent<Image>().sprite = NewSprite;
 			GameObject.Find("Collect").GetComponent<RectTransform>().sizeDelta=new Vector2(0,0);
-			GameObject.Find("Upload").GetComponent<RectTransform>().sizeDelta=new Vector2(80,80);
 		}
     }
 
@@ -379,6 +377,7 @@ public class Rummy : MonoBehaviour
 	}
 
 	void Upload(List<string> cards){
+		PlayerPrefs.SetString("FloatCard","");
 		float Vstart=0;
 		float VCardWidth=37.5F;
 		int Vcount=cards.Count;
