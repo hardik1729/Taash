@@ -124,6 +124,9 @@ public class Distribution : MonoBehaviour
 			GameObject.Find("ShareAll").GetComponent<Button>().interactable=true;
 		}
 
+		if(distribution && TableObject.transform.childCount==0)
+			DiscardDistribute();
+
 		if(GameObject.Find("Scrollbar").GetComponent<Scrollbar>().enabled)
 			Advertisement.Banner.Hide();
 		else if(Advertisement.IsReady("banner")){
@@ -233,7 +236,11 @@ public class Distribution : MonoBehaviour
 			n=n-PlayerPrefs.GetString("Players").Split(',').ToList().Count;
 			a=a+1;
 		}
-		PlayerPrefs.SetString("Send",message+a);
+		distribution=false;
+		PlayerPrefs.SetString("Send",message+a+";"+"activeDistribute:Discard"+";DisplayTable");
+		Destroy(GameObject.Find("ShareAll"));
+		Destroy(GameObject.Find("Keep"));
+		Destroy(GameObject.Find("Discard"));
 	}
 
 	public void KeepDistribute(){
@@ -267,7 +274,7 @@ public class Distribution : MonoBehaviour
 			KeepBtn.image=KeepImage;
 			KeepBtn.onClick.AddListener(delegate { KeepDistribute(); });
 			RectTransform KeeprectTransform = KeepBtn.GetComponent<RectTransform>();
-			KeeprectTransform.localPosition = new Vector3(-100, 160, 0);
+			KeeprectTransform.localPosition = new Vector3(0, 160, 0);
 			KeeprectTransform.sizeDelta = new Vector2(100, 70);
 
 			GameObject Discard=new GameObject("Discard");
@@ -280,8 +287,8 @@ public class Distribution : MonoBehaviour
 			DiscardBtn.image=DiscardImage;
 			DiscardBtn.onClick.AddListener(delegate { DiscardDistribute(); });
 			RectTransform DiscardrectTransform = DiscardBtn.GetComponent<RectTransform>();
-			DiscardrectTransform.localPosition = new Vector3(100, 160, 0);
-			DiscardrectTransform.sizeDelta = new Vector2(100, 100);
+			DiscardrectTransform.localPosition = new Vector3(75, 825, 0);
+			DiscardrectTransform.sizeDelta = new Vector2(50, 50);
 			
 			GameObject ShareAll=new GameObject("ShareAll");
 			ShareAll.transform.SetParent(UserObject.transform,false);

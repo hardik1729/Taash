@@ -60,7 +60,7 @@ public class Rummy : MonoBehaviour
 		UploadBtn.onClick.AddListener(delegate { Uploaded(); });
 		RectTransform UploadrectTransform = UploadBtn.GetComponent<RectTransform>();
 		UploadrectTransform.localPosition = new Vector3(-340, -340, 0);
-		UploadrectTransform.sizeDelta = new Vector2(80, 80);
+		UploadrectTransform.sizeDelta = new Vector2(120, 120);
     }
 
     // Update is called once per frame
