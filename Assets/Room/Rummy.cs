@@ -372,7 +372,7 @@ public class Rummy : MonoBehaviour
 	}
 
 	public void Uploaded(){
-		if(!Floatation)
+		if(!Floatation && PlayerPrefs.GetString("UserCards")!="" && PlayerPrefs.GetString("UserCards")!="Start")
 			PlayerPrefs.SetString("Send","Uploaded:"+PlayerPrefs.GetString("UserCards"));
 	}
 
