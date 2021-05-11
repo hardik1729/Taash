@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Android;
 using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,7 @@ public class Sample : MonoBehaviour
 	private string gameID = "4074129";
 	private string bannerID = "banner";
 	GameObject dialog = null;
+	bool HelpState=false;
 
 	void Start()
 	{
@@ -47,7 +49,8 @@ public class Sample : MonoBehaviour
 		AudioSource audio = GameObject.Find("Click").GetComponent<AudioSource>();
 		audio.Play();
 		yield return new WaitForSeconds(audio.clip.length);
-		SceneManager.LoadScene(name);
+		if(name!="")
+			SceneManager.LoadScene(name);
 	}
 
 	public void SceneChangeToRoom() {
@@ -58,5 +61,27 @@ public class Sample : MonoBehaviour
 	public void SceneChangeToCreate() {
 		PlayerPrefs.SetString("Mode","Create");
 		StartCoroutine(PlayAudio("CreateScene"));
+	}
+
+	public void help(){
+		StartCoroutine(PlayAudio(""));
+		if(HelpState){
+			HelpState=false;
+			Image BImage=GameObject.Find("Help").GetComponent<Image>() as Image;
+			Texture2D SpriteB = Resources.Load<Texture2D>("HelpOutlined");
+			Sprite BSprite = Sprite.Create(SpriteB, new Rect(0, 0, SpriteB.width, SpriteB.height),new Vector2(0,0),1);
+			BImage.sprite=BSprite;
+			foreach (Transform child in GameObject.Find("HelpCenter").transform)
+				Destroy(child.gameObject);
+		}else{
+			HelpState=true;
+			Image BImage=GameObject.Find("Help").GetComponent<Image>() as Image;
+			Texture2D SpriteB = Resources.Load<Texture2D>("HelpFilled");
+			Sprite BSprite = Sprite.Create(SpriteB, new Rect(0, 0, SpriteB.width, SpriteB.height),new Vector2(0,0),1);
+			BImage.sprite=BSprite;
+			GameObject HelpObject=new GameObject("HelpObject");
+			HelpObject.transform.SetParent(GameObject.Find("HelpCenter").transform,false);
+			HelpObject.AddComponent<HelpSample>();
+		}
 	}
 }

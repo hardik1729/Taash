@@ -43,6 +43,8 @@ public class Create : MonoBehaviour
 	bool updateSelectAll=true;
 	bool updateNext=true;
 
+	bool HelpState=false;
+
 	float transparentColor=0;
 	float translucentColor1=0.25F;
 	float translucentColor2=0.5F;
@@ -411,5 +413,27 @@ public class Create : MonoBehaviour
 		yield return new WaitForSeconds(audio.clip.length);
 		if(sceneChange)
 			SceneManager.LoadScene("RoomScene");
+	}
+
+	public void help(){
+		StartCoroutine(PlayAudio(false));
+		if(HelpState){
+			HelpState=false;
+			Image BImage=GameObject.Find("Help").GetComponent<Image>() as Image;
+			Texture2D SpriteB = Resources.Load<Texture2D>("HelpOutlined");
+			Sprite BSprite = Sprite.Create(SpriteB, new Rect(0, 0, SpriteB.width, SpriteB.height),new Vector2(0,0),1);
+			BImage.sprite=BSprite;
+			foreach (Transform child in GameObject.Find("HelpCenter").transform)
+				Destroy(child.gameObject);
+		}else{
+			HelpState=true;
+			Image BImage=GameObject.Find("Help").GetComponent<Image>() as Image;
+			Texture2D SpriteB = Resources.Load<Texture2D>("HelpFilled");
+			Sprite BSprite = Sprite.Create(SpriteB, new Rect(0, 0, SpriteB.width, SpriteB.height),new Vector2(0,0),1);
+			BImage.sprite=BSprite;
+			GameObject HelpObject=new GameObject("HelpObject");
+			HelpObject.transform.SetParent(GameObject.Find("HelpCenter").transform,false);
+			HelpObject.AddComponent<HelpCreate>();
+		}
 	}
 }

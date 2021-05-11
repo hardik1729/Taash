@@ -103,9 +103,13 @@ public class Distribution : MonoBehaviour
 			}
 		}
 
-		if(distribution && Count!=PlayCards.Count && TableObject.transform.childCount>1){
-			GameObject.Find("T"+(TableObject.transform.childCount-2)).GetComponent<Button>().enabled=false;
-			GameObject.Find("T"+(TableObject.transform.childCount-2)).GetComponent<Button>().interactable=false;
+		int c=0;
+		if(distribution)
+			c=1;
+
+		if(distribution && Count!=PlayCards.Count && TableObject.transform.childCount>c){
+			GameObject.Find("T"+(TableObject.transform.childCount-1-c)).GetComponent<Button>().enabled=false;
+			GameObject.Find("T"+(TableObject.transform.childCount-1-c)).GetComponent<Button>().interactable=false;
 			GameObject.Find("Keep").GetComponent<Button>().enabled=false;
 			GameObject.Find("Keep").GetComponent<Button>().interactable=false;
 			GameObject.Find("Discard").GetComponent<Button>().enabled=false;
@@ -113,9 +117,9 @@ public class Distribution : MonoBehaviour
 			GameObject.Find("ShareAll").GetComponent<Button>().enabled=false;
 			GameObject.Find("ShareAll").GetComponent<Button>().interactable=false;
 		}
-		else if(distribution && TableObject.transform.childCount>1){
-			GameObject.Find("T"+(TableObject.transform.childCount-2)).GetComponent<Button>().enabled=true;
-			GameObject.Find("T"+(TableObject.transform.childCount-2)).GetComponent<Button>().interactable=true;
+		else if(distribution && TableObject.transform.childCount>c){
+			GameObject.Find("T"+(TableObject.transform.childCount-1-c)).GetComponent<Button>().enabled=true;
+			GameObject.Find("T"+(TableObject.transform.childCount-1-c)).GetComponent<Button>().interactable=true;
 			GameObject.Find("Keep").GetComponent<Button>().enabled=true;
 			GameObject.Find("Keep").GetComponent<Button>().interactable=true;
 			GameObject.Find("Discard").GetComponent<Button>().enabled=true;
@@ -144,12 +148,19 @@ public class Distribution : MonoBehaviour
 			Destroy(child.gameObject);
 		foreach (Transform child in GameObject.Find("Temp").transform)
 			Destroy(child.gameObject);
+		foreach (Transform child in GameObject.Find("HelpCenter").transform)
+			Destroy(child.gameObject);
 		activeDistribute=true;
 		distribution=false;
 		PlayCards.Clear();
 		Count=PlayCards.Count;
 		GameObject GO=new GameObject("Script");
 		GO.transform.SetParent(GameObject.Find("Temp").transform,false);
+		Image BImage=GameObject.Find("Help").GetComponent<Image>() as Image;
+		Texture2D SpriteB = Resources.Load<Texture2D>("HelpOutlined");
+		Sprite BSprite = Sprite.Create(SpriteB, new Rect(0, 0, SpriteB.width, SpriteB.height),new Vector2(0,0),1);
+		BImage.sprite=BSprite;
+		PlayerPrefs.SetInt("HelpState",0);
 
 		Scrollbar s=GameObject.Find("Scrollbar").GetComponent<Scrollbar>();
 		Button Next=GameObject.Find("Next").GetComponent<Button>();
@@ -322,19 +333,22 @@ public class Distribution : MonoBehaviour
 		List<string> players=new List<string>(PlayerPrefs.GetString("Players").Split(',').ToList());
 		int i=players.IndexOf(distributor);
 		int k=players.IndexOf(PlayerPrefs.GetString("User"));
-		for(int j=1;j<=players.Count && TableObject.transform.childCount>1;j++){
+		int c=0;
+		if(distribution)
+			c=1;
+		for(int j=1;j<=players.Count && TableObject.transform.childCount>c;j++){
 			if((i+j)%players.Count==k){
-				GameObject child=TableObject.transform.GetChild(TableObject.transform.childCount-2).gameObject;
-				TempUserCards.Add(PlayCards[TableObject.transform.childCount-2]);
-				PlayCards.RemoveAt(TableObject.transform.childCount-2);
+				GameObject child=TableObject.transform.GetChild(TableObject.transform.childCount-1-c).gameObject;
+				TempUserCards.Add(PlayCards[TableObject.transform.childCount-1-c]);
+				PlayCards.RemoveAt(TableObject.transform.childCount-1-c);
 				Count=PlayCards.Count;
 				Vector3 TempPosition=TableObject.transform.GetChild(0).position;
 				child.transform.SetParent(UserObject.transform,false);
 				child.transform.position=TempPosition;
 				StartCoroutine (SmoothLerpCreate(0.5f,child));
 			}else{
-				GameObject child=TableObject.transform.GetChild(TableObject.transform.childCount-2).gameObject;
-				PlayCards.RemoveAt(TableObject.transform.childCount-2);
+				GameObject child=TableObject.transform.GetChild(TableObject.transform.childCount-1-c).gameObject;
+				PlayCards.RemoveAt(TableObject.transform.childCount-1-c);
 				Count=PlayCards.Count;
 				Vector3 TempPosition=TableObject.transform.GetChild(0).position;
 				child.transform.SetParent(GameObject.Find(players[(i+j)%players.Count]).transform,false);

@@ -177,9 +177,11 @@ public class Rummy : MonoBehaviour
 				rectTransformB.localEulerAngles = new Vector3(0, 0, RectRotation);
 				rectTransformB.sizeDelta = new Vector2(RectWidth, RectHeight);
 				BImage.sprite=BSprite;
-				Color color=BImage.color;
-				color.a=transparentColor;
-				BImage.color=color;
+				if(!(r==3 && c==2)){
+					Color color=BImage.color;
+					color.a=transparentColor;
+					BImage.color=color;
+				}
 			}
 		}
 
@@ -276,11 +278,8 @@ public class Rummy : MonoBehaviour
 		Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 		BRCOld1.sprite = SpriteOld;
 		BRCOld2.sprite = SpriteOld;
-		Color color1=BRCOld1.color;
 		Color color2=BRCOld2.color;
-		color1.a=transparentColor;
 		color2.a=transparentColor;
-		BRCOld1.color=color1;
 		BRCOld2.color=color2;
 	}
 
@@ -307,9 +306,6 @@ public class Rummy : MonoBehaviour
 		Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
 		Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 		BRCOld.sprite = SpriteOld;
-		Color colorOld=BRCOld.color;
-		colorOld.a=transparentColor;
-		BRCOld.color=colorOld;
 		
 		GameObject child=new GameObject("T"+rc.transform.childCount);
 		child.transform.SetParent(rc.transform,false);
@@ -340,9 +336,6 @@ public class Rummy : MonoBehaviour
 		Texture2D SpriteTextureOld = Resources.Load<Texture2D>("RectangleBlack");
 		Sprite SpriteOld = Sprite.Create(SpriteTextureOld, new Rect(0, 0, SpriteTextureOld.width, SpriteTextureOld.height),new Vector2(0,0),1);
 		BRCOld.sprite = SpriteOld;
-		Color colorOld=BRCOld.color;
-		colorOld.a=transparentColor;
-		BRCOld.color=colorOld;
 		
 		if(PlayerPrefs.GetString("User")==distributor){
 			GameObject child=RC.transform.GetChild(RC.transform.childCount-1).gameObject;
